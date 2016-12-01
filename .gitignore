@@ -1,8 +1,15 @@
 # Exclude iPython files
 .ipynb_checkpoints/
+__pycache__/
 
 # Exclude generated output
 output/
 
 # Exclude virtualenv
 venv-SI_Holmes_2016/
+
+# Exclude Emacs intermediate files
+*~
+
+# Exclude Mac detritus
+.DS_Store
