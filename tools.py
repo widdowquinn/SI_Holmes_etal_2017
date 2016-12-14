@@ -8,13 +8,21 @@ import seaborn as sns
 
 from Bio import SeqIO
 
+# PRNG seed
+SEED = 123456789
+
 
 def plot_fit_params(fit, params):
+    """Plot parameter distributions from a Stan fit
+
+    - fit     Stan fit
+    - params  list of parameters to plot
+    """
     nparams = len(params)
     fig, axes = plt.subplots(nparams, 2,
                              figsize=(10, nparams * 2.5))
     axes = axes.ravel()
-    fig.subplots_adjust(hspace=0.3)
+    fig.subplots_adjust(hspace=0.5)
     
     for idx, vbl, title in zip(range(nparams), params,
                                params):
@@ -33,6 +41,12 @@ def plot_fit_params(fit, params):
 
 
 def print_intervals(fit, param, percentile):
+    """Return confidence/credibility intervals for a Stan fit parameter
+
+    - fit          Stan fit
+    - param        the parameter to report on
+    - percentile   the percentile for the CI
+    """
     assert 0 <= percentile <= 100, "We need percentile in [0, 100]"
     lq, uq = 50 - percentile/2., 50 + percentile/2.
     qs = tuple(np.percentile(fit[param], [lq, uq]))
@@ -40,6 +54,14 @@ def print_intervals(fit, param, percentile):
 
 
 def plot_threshold_errors(means, errors, thresh, upper=True, param=''):
+    """Plot ordered mean values and associated errors
+
+    - means        series of mean values
+    - errors       series of errors (same order as means)
+    - thresh       a threshold mean to start/stop rendering from
+    - upper        plot upwards from threshold (upper=True) or downwards
+    - param        name of parameter/coeff being plotted
+    """
     # apply threshold and order values
     if upper:
         means_t = means.loc[means >= thresh]
@@ -67,6 +89,7 @@ def plot_threshold_errors(means, errors, thresh, upper=True, param=''):
 
 
 def plot_input_output_violin(data):
+    """Plot Seaborn violin plot of log input and output data"""
     input_v_output = pd.melt(data,
                              id_vars=['probe', 'replicate', 'treatment'],
                              value_vars=['log_input', 'log_output'])
@@ -81,6 +104,10 @@ def plot_input_output_violin(data):
 
 
 def corrfunc(x, y, **kws):
+    """Return a matplotlib axis with Pearson coeff for x and y
+
+    Function to support plot_correlation
+    """
     r, _ = scipy.stats.pearsonr(x, y)
     ax = plt.gca()
     ax.annotate("r = {:.3f}".format(r),
@@ -88,8 +115,11 @@ def corrfunc(x, y, **kws):
                 xycoords=ax.transAxes)
     
 
-def plot_correlation(data, title=None):
-    g = sns.PairGrid(data)
+def plot_correlation(df, title=None):
+    """Render Seaborn PairGrid of df columns, with Pearson coeffs
+    in upper triangle
+    """
+    g = sns.PairGrid(df)
     g.map_lower(plt.scatter)
     g.map_diag(sns.kdeplot, legend=False)
     g.map_upper(corrfunc)
@@ -109,6 +139,10 @@ def quantile_norm(df, columns=None):
 
 
 def wide_to_long(df, stage):
+    """Convert wide dataframe to long
+
+    This function is brittle, and only for Holmes et al SI
+    """
     if not stage:
         stagestr = 'input'
     else:
@@ -127,6 +161,10 @@ def wide_to_long(df, stage):
         
 
 def wide_to_long_join(df_in, df_out, treatment):
+    """Convert two wide dataframes to long and join on common index
+
+    This function is brittle and only for Holmes et al SI
+    """
     if treatment:
         treatval = 1
     else:
@@ -139,19 +177,36 @@ def wide_to_long_join(df_in, df_out, treatment):
 
 
 def save_model(model, filename):
+    """Save pickled model/fit"""
     with open(filename, 'wb') as f:
         pickle.dump(model, f)
 
 
 def load_model(filename):
+    """Load pickled model/fit"""
     return pickle.load(open(filename, 'rb'))
 
 
+# Columns in a BLASTN+ -outfmt 6 file
 blast_columns = ['probe', 'match', 'identity', 'length', 'mismatch', 'gapopen',
                  'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore']
 
 
 def subset_blast(df, blastfile, seqfile, prefix):
+    """Return subset of passed dataframe corresponding to BLAST matches
+
+    - df          pd.DataFrame of data
+    - blastfile   BLAST+ output (-outfmt 6)
+    - seqfile     FASTA file describing sequence matches
+    - prefix      prefix to use for columns
+
+    Function adds two columns: prefix_match (takes 1/0); and match (takes
+    the sequence ID of the last qualifying match in the BLAST file, to the
+    dataframe.
+
+    This function is brittle - it's not for general reuse, just for the
+    Holmes et al SI data.
+    """
     hits = pd.read_csv(blastfile, sep="\t", names=blast_columns)
     df['{0}_match'.format(prefix)] = \
         df['probe'].isin(hits['probe'].values).astype(int)
@@ -167,3 +222,19 @@ def subset_blast(df, blastfile, seqfile, prefix):
     seqdf = pd.DataFrame({'match': ids, 'locus_tag': locus_tags})
     return pd.merge(blastdf, seqdf, 'inner', ['match'])
 
+
+def df_add_coefficient(data, coeff_name, means, errors, index_column):
+    """Add mean and error columns to dataframe and return
+
+    - data           pd.DataFrame
+    - coeff_name     coefficient, used as column head prefix
+    - means          coefficient means/estimates
+    - errors         coefficient errors (SE)
+    - index_column   what row index is being used in the means/errors
+    """
+    df = pd.DataFrame({'{0}_mean'.format(coeff_name): means,
+                       '{0}_error'.format(coeff_name): errors})
+    df.reset_index(inplace=True)
+    df = df.rename(columns={'index': index_column})
+    df = pd.merge(data, df, 'inner', [index_column])
+    return df
