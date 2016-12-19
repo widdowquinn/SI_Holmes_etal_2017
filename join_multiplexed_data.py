@@ -170,7 +170,7 @@ def main():
         logger.info("Loading test data from %s, results from %s",
                     datafile, results)
         df = load_pickle_data(datafile, results, df)
-    loger.info("Loaded pickled data. Dataframe size: %d x %d", *dfshape)
+    logger.info("Loaded pickled data. Dataframe size: %d x %d", *dfshape)
 
 
 
