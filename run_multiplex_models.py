@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.5
 #
 # run_multiplex_models.py
 #
@@ -113,12 +113,11 @@ def main():
     try:
         for dirname in [dname for dname in os.listdir(args.indirname) if
                         dname.startswith('multiplex')]:
-            cmd = "{0} -i {1} -l {1}".format(args.scriptfile,
+            cmd = "{0} -i {1} -l {2}".format(args.scriptfile,
                                              os.path.join(args.indirname,
                                                           dirname),
                                              os.path.join(args.indirname,
-                                                          dirname,
-                                                          'run.log'))
+                                                          dirname, 'run.log'))
             joblist.append(pysge.Job(dirname,
                                      cmd))
     except:

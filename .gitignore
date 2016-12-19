@@ -4,6 +4,11 @@ __pycache__/
 
 # Exclude generated output
 output/
+*.log
+jobs/
+stderr/
+stdout/
+multiplexed_data
 
 # Exclude virtualenv
 venv-SI_Holmes_2016/
@@ -13,3 +18,4 @@ venv-SI_Holmes_2016/
 
 # Exclude Mac detritus
 .DS_Store
+
