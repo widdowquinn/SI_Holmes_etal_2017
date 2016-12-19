@@ -166,7 +166,7 @@ def main():
     # Load each pickle file, and add results to a growing Pandas dataframe
     logger.info("Loading pickle files into dataframe")
     df = None
-    for datafile, results in pickles:
+    for datafile, results in infiles:
         logger.info("Loading test data from %s, results from %s",
                     datafile, results)
         df = load_pickle_data(datafile, results, df)
