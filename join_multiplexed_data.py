@@ -96,9 +96,9 @@ def get_result_filenames(dirname):
     """Returns a list of path tuples to the test data and pickled output"""
     fnames = []
     for subdir in [dname for dname in os.listdir(dirname) if
-                   os.path.isdir(dname)]:
-            pickles.append((os.path.join(dirname, subdir, "test.tab"),
-                            os.path.join(dirname, subdir, "prediction.pkl")))
+                   os.path.isdir(os.path.join(dirname, dname))]:
+            fnames.append((os.path.join(dirname, subdir, "test.tab"),
+                           os.path.join(dirname, subdir, "prediction.pkl")))
     return fnames
 
 
@@ -109,16 +109,23 @@ def extract_variable_summaries(df, varname):
     for the passed variable, returning them as a dataframe.
     """
     # Using Pandas methods
-    mean = pd.Series(data[varname][0].mean(0))
-    se = pd.Series(data[varname][0].std(0))
+    mean = pd.Series(df[varname][0].mean(0))
+    se = pd.Series(df[varname][0].std(0))
 
     # Need to use numpy functions
-    median = pd.Series(np.median(prediction_fit[varname][0], 0))
-    perc_5 = pd.Series(np.percentile(prediction_fit[varname][0], 5, 0))
-    perc_25 = pd.Series(np.percentile(prediction_fit[varname][0], 25, 0))
-    perc_75 = pd.Series(np.percentile(prediction_fit[varname][0], 75, 0))
-    perc_95 = pd.Series(np.percentile(prediction_fit[varname][0], 95, 0))
+    median = pd.Series(np.median(df[varname][0], 0))
+    perc_5 = pd.Series(np.percentile(df[varname][0], 5, 0))
+    perc_25 = pd.Series(np.percentile(df[varname][0], 25, 0))
+    perc_75 = pd.Series(np.percentile(df[varname][0], 75, 0))
+    perc_95 = pd.Series(np.percentile(df[varname][0], 95, 0))
 
+    return pd.DataFrame({'%s_mean' % varname: mean,
+                         '%s_sem' % varname: se,
+                         '%s_median' % varname: median,
+                         '%s_5pc' % varname: perc_5,
+                         '%s_95pc' % varname: perc_95,
+                         '%s_25pc' % varname: perc_25,
+                         '%s_75pc' % varname: perc_75})
 
 
 def load_pickle_data(datafilename, picklename, df=None):
@@ -132,11 +139,11 @@ def load_pickle_data(datafilename, picklename, df=None):
     """
     # load pickled results and input data
     with open(picklename, 'rb') as ifh:
-        data = pickle.load(ifh)
+        results = pickle.load(ifh)
     indata = pd.read_csv(datafilename, sep="\t")
 
     # Obtain summary of pickled data predictions and join to the input data
-    y_pred = extract_variable_summaries(df, 'y_pred')  # Predictions
+    y_pred = extract_variable_summaries(results, 'y_pred')  # Predictions
     outdata = indata.reset_index(drop=True)
     outdata = outdata.join(y_pred, how="outer")
 
@@ -161,7 +168,8 @@ def main():
     # Identify pickle files
     logger.info("Looking for test data/pickle files in %s", args.indirname)
     infiles = get_result_filenames(args.indirname)
-    logger.info("Identified input files:\n%s", "\n\t".join(infiles))
+    logger.info("Identified input files:\n\t%s",
+                "\n\t".join(["%s, %s" % fn for fn in infiles]))
 
     # Load each pickle file, and add results to a growing Pandas dataframe
     logger.info("Loading pickle files into dataframe")
@@ -170,8 +178,15 @@ def main():
         logger.info("Loading test data from %s, results from %s",
                     datafile, results)
         df = load_pickle_data(datafile, results, df)
-    logger.info("Loaded pickled data. Dataframe size: %d x %d", *dfshape)
-
+    logger.info("Loaded pickled data.\nDataframe size: %d x %d", *df.shape)
+    logger.info("Dataframe columns:\n\t%s",
+                '\n\t'.join(sorted([name for name in df.columns])))
+    
+    # Write data to file
+    logger.info("Writing data to %s", args.outfilename)
+    df.sort_values("locus_tag", inplace=True)
+    df.to_csv(args.outfilename, sep="\t")
+    logger.info("Exiting: %s", time.asctime())
 
 
 # SCRIPT
