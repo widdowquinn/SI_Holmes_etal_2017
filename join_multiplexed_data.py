@@ -92,16 +92,14 @@ def logger_setup(logfilename=None, verbose=False):
     return logger
 
 
-def get_pickle_filenames(dirname):
-    """Returns a list of paths to the pickled output files"""
-    pickles = []
+def get_result_filenames(dirname):
+    """Returns a list of path tuples to the test data and pickled output"""
+    fnames = []
     for subdir in [dname for dname in os.listdir(dirname) if
                    os.path.isdir(dname)]:
-        for fname in [ifn for ifn in
-                      os.listdir(os.path.join(dirname, subdir)) if
-                      os.path.splitext(ifn)[-1] == '.pkl']:
-            pickles.append(os.path.join(dirname, subdir, fname))
-    return pickles
+            pickles.append((os.path.join(dirname, subdir, "test.tab"),
+                            os.path.join(dirname, subdir, "prediction.pkl")))
+    return fnames
 
 
 def extract_variable_summaries(df, varname):
