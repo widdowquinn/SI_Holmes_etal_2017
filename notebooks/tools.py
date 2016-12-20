@@ -16,9 +16,11 @@ from matplotlib import pyplot as plt
 
 import numpy as np
 import pandas as pd
+import random
 import scipy
 import seaborn as sns
 
+from Bio import SeqIO
 
 # PRNG seed
 SEED = 123456789
@@ -119,17 +121,21 @@ def wide_to_long(ctl_in, ctl_out, trt_in, trt_out):
     * probe
     * replicate
     * treatment
+    * repXtrt (combination of replicate and treatment)
     * input
     * output
     * log_input
     * log_output
     """
     ctl_long = wide_to_long_join(ctl_in, ctl_out, treatment=False)
-    trt_long = wide_to_long_join(trt_in, trt_out, treatment=False)
+    trt_long = wide_to_long_join(trt_in, trt_out, treatment=True)
     data = ctl_long.append(trt_long, ignore_index=True)
     data['log_input'] = np.log(data['input'])
     data['log_output'] = np.log(data['output'])
-    data = data[['probe', 'replicate', 'treatment',
+    data['repXtrt'] = 'rep' + data['replicate'].map(str) +\
+                      'trt' + data['treatment'].map(str)
+    data = data[['probe',
+                 'replicate', 'treatment', 'repXtrt',
                  'input', 'output',
                  'log_input', 'log_output']]
     return data
@@ -142,9 +148,74 @@ def plot_input_output_violin(data):
                              value_vars=['log_input', 'log_output'])
     input_v_output.columns = ['probe', 'replicate', 'treatment',
                               'stage', 'log_intensity']
+
     g = sns.violinplot(data=input_v_output, x="treatment", y="log_intensity",
                        hue="stage", split=True)
     g.set_xticklabels(['control', 'treatment'])
     g.set_ylabel("log(intensity)")
     g.set_xlabel("")
     g.set_title("log(intensity) distribution by treatment and input/output")
+
+
+def unique_probe_matches(blastfiles):
+    """Returns a dataframe of unique queries and their unique matches"""
+    # Columns in a BLASTN+ -outfmt 6 file
+    blast_columns = ['probe', 'match', 'identity', 'length', 'mismatch',
+                     'gapopen', 'qstart', 'qend', 'sstart', 'send',
+                     'evalue', 'bitscore']
+    df = None
+    for bfile in blastfiles:
+        if df is None:
+            df = pd.read_csv(bfile, sep="\t", names=blast_columns)
+        else:
+            df = df.append(pd.read_csv(bfile, sep="\t",
+                                       names=blast_columns))
+    df = df.drop_duplicates('probe')  # Drop rows with repeated probes
+    return df
+
+
+def annotate_seqdata(df, seqfiles):
+    """Returns the passed dataframe, annotated with locus tags"""
+    ids = []
+    locus_tags = []
+    for seqfile in seqfiles:
+        for seq in SeqIO.parse(seqfile, 'fasta'):
+            labels = seq.description.split(' ')
+            for label in labels:
+                if label.startswith('[locus_tag'):
+                    ids.append(seq.id)
+                    locus_tags.append(label.split('=')[-1][:-1])
+    seqdf = pd.DataFrame({'match': ids, 'locus_tag': locus_tags})
+    return pd.merge(df, seqdf, 'inner', ['match'])    
+
+
+def index_column(df, colname):
+    """Return the dataframe, with an index column for 'probe's"""
+    col_ids = df[colname].unique()
+    nvals = len(col_ids)
+    col_lookup = dict(zip(col_ids, range(nvals)))
+    df['{0}_index'.format(colname)] = df[colname].replace(col_lookup).values
+    return df
+    
+
+def reduce_dataset(df, colname, n=2000, seed=True):
+    """Returns the passed dataframe, with a reduced set of rows"""
+    if seed:
+        random.seed(SEED)  # for reproducibility of random choice
+
+    col_ids = df[colname].unique()
+    nvals = len(col_ids)
+
+    indices = [random.randint(0, nvals) for i in range(n)]  
+    reduced = df.loc[df['{0}_index'.format(colname)].isin(indices)]
+
+    # create indices and values for probes
+    new_ids = reduced[colname].unique()
+    nvals = len(new_ids)
+    new_lookup = dict(zip(new_ids, range(nvals)))
+
+    # add data column with probe index from probe_lookup
+    reduced['{0}_index'.format(colname)] =\
+        reduced[colname].replace(new_lookup).values
+
+    return reduced
