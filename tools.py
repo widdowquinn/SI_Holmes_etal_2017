@@ -238,3 +238,50 @@ def df_add_coefficient(data, coeff_name, means, errors, index_column):
     df = df.rename(columns={'index': index_column})
     df = pd.merge(data, df, 'inner', [index_column])
     return df
+
+
+def parse_full_fit(picklefilename, datafilename):
+    """Parses the full model fit into a Pandas dataframe which is returned
+
+    The returned dataframe has columns for mean, SEM, median, and 2.5, 25,
+    75, 97.5 percentiles
+    """
+    # Load fit
+    with open(picklefilename, 'rb') as ifh:
+        fit = pickle.load(ifh)
+    indata = pd.read_csv(datafilename, sep="\t")
+    locus_tags = indata['locus_tag'].unique()
+    print(len(locus_tags))
+
+    # Get dataframes for each fitted variable summary, and join them
+    dflist = []
+    for varname in ['a', 'b', 'g', 'd']:
+        dflist.append(extract_variable_summaries(fit, varname, locus_tags))
+
+    return pd.concat(dflist, axis=1)
+
+
+def extract_variable_summaries(df, varname, index=None):
+    """Extracts summary variables for a variable in the passed dataframe
+
+    Calculates mean, std, median, and 5%, 25%, 75% and 95% percentiles
+    for the passed variable, returning them as a dataframe.
+    """
+    # Using Pandas methods
+    mean = pd.Series(df[varname][0].mean(0), index=index)
+    se = pd.Series(df[varname][0].std(0), index=index)
+
+    # Need to use numpy functions
+    median = pd.Series(np.median(df[varname][0], 0), index=index)
+    perc_2_5 = pd.Series(np.percentile(df[varname][0], 2.5, 0), index=index)
+    perc_25 = pd.Series(np.percentile(df[varname][0], 25, 0), index=index)
+    perc_75 = pd.Series(np.percentile(df[varname][0], 75, 0), index=index)
+    perc_97_5 = pd.Series(np.percentile(df[varname][0], 97.5, 0), index=index)
+
+    return pd.DataFrame({'%s_mean' % varname: mean,
+                         '%s_sem' % varname: se,
+                         '%s_median' % varname: median,
+                         '%s_2.5pc' % varname: perc_2_5,
+                         '%s_97.5pc' % varname: perc_97_5,
+                         '%s_25pc' % varname: perc_25,
+                         '%s_75pc' % varname: perc_75})
