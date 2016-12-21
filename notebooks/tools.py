@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.5
 #
 # tools.py
 #
@@ -221,10 +221,6 @@ def reduce_dataset(df, colname, n=2000, seed=True):
     return reduced
 
 
-# named tuple to hold estimated parameters for the model
-Estimates = namedtuple("Estimates", "a b g d")
-
-
 def extract_fit_variable_summary(fit, varname, index=None):
     """Returns summary information for a variable in the passed Stan fit object
 
@@ -279,10 +275,94 @@ def extract_df_variable_summary(df, varname, index=None):
                          '%s_25pc' % varname: perc_25,
                          '%s_75pc' % varname: perc_75})
 
+
 def extract_variable_summaries(obj, otype='fit', index=None):
     """Return named tuple of parameter estimate summaries"""
+    # Choice of function depends on object being passed
     functions = {'fit': extract_fit_variable_summary,
-                 'df': extract_df_variable_summary)
-    fn = functions[otype]
-    return Estimates(fn(obj, 'a', index), fn(obj, 'b', index),
-                     fn(obj, 'd', index), fn(obj, 'd', index))
+                 'df': extract_df_variable_summary}
+
+    # Get dataframes for each fitted variable summary, and join them
+    dflist = []
+    for varname in ['a', 'b', 'g', 'd']:
+        dflist.append(functions[otype](obj, varname, index))
+
+    df = pd.concat(dflist, axis=1)
+    df.reset_index(inplace=True)
+    df.rename(columns={'index': 'locus_tag'}, inplace=True)
+    df = df.sort_values('locus_tag')
+    return df
+
+
+def boxplot_medians(estimates):
+    """Plot 2x2 boxplot of parameter median estimates"""
+    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+    axes = axes.ravel()
+    fig.subplots_adjust(hspace=0.3)
+
+    for idx, varname in enumerate(['a', 'b', 'g', 'd']):
+        sns.boxplot(estimates['{0}_median'.format(varname)],
+                    ax=axes[idx])
+        axes[idx].set_title("Median {0}".format(varname))
+
+
+def split_estimates(df, org):
+    """Split the passed dataframe into either Sakai or DH10B subsets"""
+    if org == 'dh10b':
+        subset = df.loc[df['locus_tag'].str.startswith('ECDH10B')]
+    else:
+        subset = df.loc[~df['locus_tag'].str.startswith('ECDH10B')]
+    return subset
+
+
+def plot_treatment_vs_control(df):
+    """Plot median treatment vs control parameters in a 2x2 matrix"""
+    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+    axes = axes.ravel()
+    fig.subplots_adjust(hspace=0.3)
+    
+    for idx, xvar, yvar, ax in zip(range(4),
+                                   ['a_median', 'a_median',
+                                    'b_median', 'b_median'],
+                                   ['g_median', 'd_median',
+                                    'g_median', 'd_median'],
+                                   axes):
+        ax.scatter(df[xvar], df[yvar], alpha=0.2)
+        ax.set_xlabel(xvar)
+        ax.set_ylabel(yvar)
+
+
+def label_positive_effects(df):
+    """Label the locus tags as having positive effects on treatment, control,
+    or both.
+    """
+    df['trt_pos'] = df['d_25pc'] > 0
+    df['ctl_pos'] = df['b_25pc'] > np.percentile(df['b_median'], 97.5)
+    df['combined'] = df['trt_pos'] & df['ctl_pos']
+    return df
+
+
+def plot_parameter(df, varname, title='', thresh=0):
+    """Plot the estimated parameter median, and 50% CI, in locus tag order
+    
+    credibility intervals are coloured blue if they include the threshold,
+    red (value below threshold) or green (value above threshold) otherwise
+    """
+    vals = df['{0}_median'.format(varname)]
+    cilo = df['{0}_25pc'.format(varname)]
+    cihi = df['{0}_75pc'.format(varname)]
+    
+    plt.figure(figsize=(20,8))
+    #plt.scatter(range(len(test_data)), test_data['beta'], alpha=1, color='k')
+    plt.scatter(range(len(df)), vals, c='k', marker='.')
+    for idx, val, vlo, vhi in zip(range(len(df)),
+                                  vals, cilo, cihi):
+        if vlo < thresh < vhi:
+            color = 'b-'
+        elif val < thresh:
+            color = 'r-'
+        elif val > thresh:
+            color = 'g-'
+        plt.plot([idx, idx], [vlo, vhi], color, alpha=0.4)
+    plt.title("{0} [threshold: {1}]".format(title, thresh))
+    plt.xlim(0, len(df));
