@@ -221,3 +221,68 @@ def reduce_dataset(df, colname, n=2000, seed=True):
     return reduced
 
 
+# named tuple to hold estimated parameters for the model
+Estimates = namedtuple("Estimates", "a b g d")
+
+
+def extract_fit_variable_summary(fit, varname, index=None):
+    """Returns summary information for a variable in the passed Stan fit object
+
+    Calculates mean, std, median, and 5%, 25%, 75% and 95% percentiles
+    for the passed variable, returning them as a dataframe.
+    """
+    # Using Pandas methods
+    mean = pd.Series(fit[varname].mean(0), index=index)
+    se = pd.Series(fit[varname].std(0), index=index)
+
+    # Need to use numpy functions
+    median = pd.Series(np.median(fit[varname], 0), index=index)
+    perc_2_5 = pd.Series(np.percentile(fit[varname], 2.5, 0), index=index)
+    perc_25 = pd.Series(np.percentile(fit[varname], 25, 0), index=index)
+    perc_75 = pd.Series(np.percentile(fit[varname], 75, 0), index=index)
+    perc_97_5 = pd.Series(np.percentile(fit[varname], 97.5, 0), index=index)
+
+    return pd.DataFrame({'%s_mean' % varname: mean,
+                         '%s_sem' % varname: se,
+                         '%s_median' % varname: median,
+                         '%s_2.5pc' % varname: perc_2_5,
+                         '%s_97.5pc' % varname: perc_97_5,
+                         '%s_25pc' % varname: perc_25,
+                         '%s_75pc' % varname: perc_75})
+
+
+
+def extract_df_variable_summary(df, varname, index=None):
+    """Returns summary information for a variable in the passed datframe object
+
+    This function expects a dataframe of pickled fit information
+
+    Calculates mean, std, median, and 5%, 25%, 75% and 95% percentiles
+    for the passed variable, returning them as a dataframe.
+    """
+    # Using Pandas methods
+    mean = pd.Series(df[varname][0].mean(0), index=index)
+    se = pd.Series(df[varname][0].std(0), index=index)
+
+    # Need to use numpy functions
+    median = pd.Series(np.median(df[varname][0], 0), index=index)
+    perc_2_5 = pd.Series(np.percentile(df[varname][0], 2.5, 0), index=index)
+    perc_25 = pd.Series(np.percentile(df[varname][0], 25, 0), index=index)
+    perc_75 = pd.Series(np.percentile(df[varname][0], 75, 0), index=index)
+    perc_97_5 = pd.Series(np.percentile(df[varname][0], 97.5, 0), index=index)
+
+    return pd.DataFrame({'%s_mean' % varname: mean,
+                         '%s_sem' % varname: se,
+                         '%s_median' % varname: median,
+                         '%s_2.5pc' % varname: perc_2_5,
+                         '%s_97.5pc' % varname: perc_97_5,
+                         '%s_25pc' % varname: perc_25,
+                         '%s_75pc' % varname: perc_75})
+
+def extract_variable_summaries(obj, otype='fit', index=None):
+    """Return named tuple of parameter estimate summaries"""
+    functions = {'fit': extract_fit_variable_summary,
+                 'df': extract_df_variable_summary)
+    fn = functions[otype]
+    return Estimates(fn(obj, 'a', index), fn(obj, 'b', index),
+                     fn(obj, 'd', index), fn(obj, 'd', index))
