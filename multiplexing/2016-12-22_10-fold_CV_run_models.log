@@ -1,5 +1,5 @@
 INFO: # ./run_multiplex_models.py logfile
-INFO: # Thu Dec 22 10:17:40 2016
+INFO: # Thu Dec 22 12:57:42 2016
 INFO: Namespace(indirname='2016-12-22_10-fold_CV', logfile='2016-12-22_10-fold_CV_run_models.log', scriptfile='./run_model.py', seedval=123456789, verbose=True)
 INFO: Composing jobs for submission
 INFO: Jobs created:
@@ -15,4 +15,4 @@ INFO: Jobs created:
 	multiplex00009: ./run_model.py -i 2016-12-22_10-fold_CV/multiplex00009 -l 2016-12-22_10-fold_CV/multiplex00009/run.log --seed 123456789
 	multiplex00000: ./run_model.py -i 2016-12-22_10-fold_CV/multiplex00000 -l 2016-12-22_10-fold_CV/multiplex00000/run.log --seed 123456789
 INFO: Submitting jobs to SGE
-INFO: Script exiting: Thu Dec 22 10:17:40 2016
+INFO: Script exiting: Thu Dec 22 12:57:43 2016
