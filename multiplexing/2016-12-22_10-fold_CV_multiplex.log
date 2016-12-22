@@ -1,0 +1,57 @@
+INFO: # ./multiplex_data.py logfile
+INFO: # Thu Dec 22 10:10:28 2016
+INFO: Namespace(datafile='../notebooks/datasets/normalised_array_data.tab', kfold=10, logfile='2016-12-22_10-fold_CV_multiplex.log', outdirname='2016-12-22_10-fold_CV', seedval=123456789, verbose=True)
+INFO: Loading data file ../notebooks/datasets/normalised_array_data.tab
+INFO: Loaded data from ../notebooks/datasets/normalised_array_data.tab
+INFO: Data shape: 49872 x 12
+INFO: Data contains 6084 unique locus tags
+INFO: Data headers: ['probe', 'replicate', 'treatment', 'repXtrt', 'input', 'output', 'log_input', 'log_output', 'match', 'locus_tag', 'probe_index', 'locus_tag_index']
+INFO: Writing 10 k-fold CV datasets to subdirectories
+INFO: Main subdirectory: 2016-12-22_10-fold_CV
+INFO: New CV data subdirectories:
+INFO: 2016-12-22_10-fold_CV
+INFO: 	|-multiplex00006
+INFO: 	|	|-test.tab
+INFO: 	|	|-train.tab
+INFO: 	|
+INFO: 	|-multiplex00001
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00008
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00005
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00010
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00004
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00002
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00003
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00007
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00009
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: 	|-multiplex00000
+INFO: 	|	|-train.tab
+INFO: 	|	|-test.tab
+INFO: 	|
+INFO: Exiting cleanly Thu Dec 22 10:10:41 2016
