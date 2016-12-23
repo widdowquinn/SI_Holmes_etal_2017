@@ -364,5 +364,5 @@ def plot_parameter(df, varname, title='', thresh=0):
         elif val > thresh:
             color = 'g-'
         plt.plot([idx, idx], [vlo, vhi], color, alpha=0.4)
-    plt.title("{0} [threshold: {1}]".format(title, thresh))
+    plt.title("{0} [threshold: {1:.2f}]".format(title, thresh))
     plt.xlim(0, len(df));
