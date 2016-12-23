@@ -96,6 +96,13 @@ Next, use the `run_multiplex_models.py` script to fit the Stan model to each of 
 
 **NOTE:** the `run_multiplex_models.py` has a dependency on a `pysge` module for submission of jobs to our local cluster. This is not included in the `requirements.txt` file, so the script will fail at this point. The command-lines that this script produces can, however, be executed on any system available to you.
 
+Finally, use the `join_multiplexed_data.py` script to combine the prediction output from each of the 10 test sets into a single `.tab` file. This should contain predictions for each of the probes from the input dataset, using the model fit to the remaining training data.
+
+```bash
+./join_multiplexed_data.py -v -l 10-fold_CV_join_data.log -i 10-fold_CV -o 10-fold_CV.tab
+```
+
+This combined data can then be used as input for notebook 03.
 
 ### NOTE: PRNG seeds
 
