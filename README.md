@@ -1,25 +1,36 @@
+<img src="notebooks/images/JHI_STRAP_Web.png" style="width: 150px; float: right;">
+
 # README.md
 
-This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2017)](). These files are intended to enable independent reproduction and extension of the analysis reported in the paper.
+This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2017)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
 
 ## Files and Directories
 
 * `data/`: directory containing the raw microarray data, and the genomic data used in the analysis
-* `notebooks/`: directory containing Jupyter notebooks describing the data QA, model fitting and model validation
-* `multiplexing/`: directory containing scripts used to generate multiplexed data for 10-fold cross-validation, and to fit the cross-validation models
-* `LICENCE`: a copy of the licence that governs the code and data contained in this repository
+* `LICENCE`: a copy of the MIT licence that governs the code contained in this repository
+* `models/`: directory containing Stan models in plan text format
+* `multiplexing/`: directory containing scripts used to generate multiplexed data for *k*-fold cross-validation, and to fit the cross-validation models
+* `notebooks/`: directory containing Jupyter notebooks describing and enabling reproduction of the data QA, model fitting and model validation
 * `README.md`: this file
-* `requirements.txt`: file describing the Python dependencies of the notebooks and scripts, used to create a virtual environment for replication of the analysis, and experimentation.
+* `requirements.txt`: file describing the Python dependencies of the notebooks and scripts, which can be used to create a virtual environment for replication of the analysis from the paper.
+
+### How to get help for the code/analyses in this repository
+
+Please raise any issues at the GitHub issues page for this repository:
+
+* [GitHub issues page]()
 
 ## Quick Start
 
 ### Set up the environment
 
-We would like our analysis to be reproducible, so recommend using a Python virtual environment to ensure compatibility of dependencies. The virtual environment separates the running of these analyses from your system Python installation and enables installation of Python packages, without interfering with the system Python.
+We would like our analysis to be reproducible, and for this we recommend using a Python virtual environment to ensure compatibility of dependencies and to replicate the environment used for the analysis. The virtual environment separates installation of Python packages from your system Python installation, enabling the running of these analyses without interfering with the system Python.
 
 Using `pip` to install the required dependencies listed in `requirements.txt` should ensure that the code in this repository runs as expected.
 
 #### Create and start the virtual environment
+
+**NOTE:** You will need to have installed `virtualenv`[[*](http://docs.python-guide.org/en/latest/dev/virtualenvs/)] for your system.
 
 ```bash
 virtualenv venv-SI_Holmes_2016
@@ -64,7 +75,11 @@ To replicate the manuscript model from scratch: start the virtual environment, t
 
 ### Data processing, QA and normalisation
 
-* `01-data_qa.ipynb`: this will take the input data from the `notebooks/data/` directory, and process it into the `notebooks/datasets/normalised_array_data.tab` file that was used for the full model fit, and to produce the multiplexed output datasets.
+* `01-data_qa.ipynb`: this will take the input data from the `notebooks/data/` directory, and process it into the output files:
+  *  `notebooks/datasets/normalised_array_data.tab`: used for the full model fit, and to produce the multiplexed output datasets.
+  *  `reduced_probe_data.tab`: a subset of `notebooks/datasets/normalised_array_data.tab`, used for testing code
+  *  `reduced_locus_data.tab`: a subset of `notebooks/datasets/normalised_array_data.tab`, used for testing code
+
 
 ### Fitting the model on the full dataset
 
@@ -83,7 +98,9 @@ cd multiplexing
 then build the input datasets with the `multiplex_data.py` script:
 
 ```bash
-./multiplex_data.py -v -d ../notebooks/datasets/normalised_array_data.tab -k 10 -o 10-fold_CV --seed 123456789 -l 10-fold_CV_multiplex.log
+./multiplex_data.py -v -d ../notebooks/datasets/normalised_array_data.tab \
+                    -k 10 -o 10-fold_CV --seed 123456789 \
+                    -l 10-fold_CV_multiplex.log
 ```
 
 This will create a new directory called `10-fold_CV`, containing one new subdirectory for each training/test split of the input dataset.
@@ -91,22 +108,25 @@ This will create a new directory called `10-fold_CV`, containing one new subdire
 Next, use the `run_multiplex_models.py` script to fit the Stan model to each of the multiplexed training/test sets.
 
 ```bash
-./run_multiplex_models.py -v -i 10-fold_CV --script ./run_model.py --seed 123456789 -l 10-fold_CV_run_models.log
+./run_multiplex_models.py -v -i 10-fold_CV --script ./run_model.py \
+                          --seed 123456789 \
+                          -l 10-fold_CV_run_models.log
 ```
 
-**NOTE:** the `run_multiplex_models.py` has a dependency on a `pysge` module for submission of jobs to our local cluster. This is not included in the `requirements.txt` file, so the script will fail at this point. The command-lines that this script produces can, however, be executed on any system available to you.
+**NOTE:** the `run_multiplex_models.py` has a dependency on the [`pysge` module](https://github.com/widdowquinn/pysge) for submission of jobs to our local cluster. This is not included in the `requirements.txt` file, so the script will fail at this point. The command-lines that this script produces in the log file can, however, be copied for execution on any system available to you. If you happen to be running on a cluster with SGE scheduling, then installation of `pysge` in the virtual environment will enable use of the cluster to fit the multiplexed models.
 
-Finally, use the `join_multiplexed_data.py` script to combine the prediction output from each of the 10 test sets into a single `.tab` file. This should contain predictions for each of the probes from the input dataset, using the model fit to the remaining training data.
+Finally, use the `join_multiplexed_data.py` script to combine prediction output from each of the 10 test sets into a single `.tab` file. This will contain predictions for each of the probes from the input dataset, using the model fit to the remaining training data.
 
 ```bash
-./join_multiplexed_data.py -v -l 10-fold_CV_join_data.log -i 10-fold_CV -o 10-fold_CV.tab
+./join_multiplexed_data.py -v -i 10-fold_CV -o 10-fold_CV.tab \
+                           -l 10-fold_CV_join_data.log
 ```
 
-This combined data can then be used as input for notebook 03.
+This combined data can then be used as input for the notebook `03-model_validation.ipynb`.
 
 ### NOTE: PRNG seeds
 
-All random processes in the model building/fitting can take a seed value for the pseudorandom number generator. For replication of the values in the paper, this seed should be set to `123456789` for all processes:
+All random processes in the model building and fitting can take a seed value for the pseudorandom number generator. For replication of the values in the paper, this seed should be set to `123456789` for all processes:
 
 * the seed used for the main Stan fit (in notebook `02-full_model_fit`)
 * the seed for splitting the input data into multiplexed sets (`multiplex_data.py`)
