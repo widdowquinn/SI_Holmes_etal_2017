@@ -1,3 +1,5 @@
+<img src="../notebooks/images/JHI_STRAP_Web.png" style="width: 150px; float: right;">
+
 # README.md - `data`
 
 This directory contains supplementary information data for the enrichment array experiment described in [Holmes *et al.* (2017)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
