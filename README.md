@@ -4,7 +4,15 @@
 
 This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2017)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
 
+## Table of Contents
+
+1. [Files and Directories](#files)
+2. [Quick Start](#quickstart)
+3. [Replicating the manuscript model](#replicate)
+
+<a id="files">
 ## Files and Directories
+</a>
 
 * `data/`: directory containing the raw microarray data, and the genomic data used in the analysis
 * `LICENCE`: a copy of the MIT licence that governs the code contained in this repository
@@ -20,7 +28,9 @@ Please raise any issues at the GitHub issues page for this repository:
 
 * [GitHub issues page]()
 
+<a id="quickstart">
 ## Quick Start
+</a>
 
 ### Set up the environment
 
@@ -68,8 +78,9 @@ From the Jupyter homepage in your browser window, click on the link to the `note
 
 When they were committed to the repository, the notebooks contained output from the original runs, so they can be read and understood without needing to rerun the models. If you would like to rerun/reproduce/modify these outputs, we recommend restarting the kernel and clearing all output before beginning. This can be done by clicking on `Kernel -> Restart & Clear Output`, in the notebook window.
 
-
+<a id="replicate">
 ## Replicating the manuscript model
+</a>
 
 To replicate the manuscript model from scratch: start the virtual environment, then run the notebooks and scripts as described below (remembering to use `Kernel -> Restart & Clear Output` in each notebook to remove the original/existing outputs):
 
