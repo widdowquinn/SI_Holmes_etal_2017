@@ -366,3 +366,27 @@ def plot_parameter(df, varname, title='', thresh=0):
         plt.plot([idx, idx], [vlo, vhi], color, alpha=0.4)
     plt.title("{0} [threshold: {1:.2f}]".format(title, thresh))
     plt.xlim(0, len(df));
+
+
+def get_annotation(tag, products):
+    try:
+        return products[tag]
+    except KeyError:
+        return None
+
+
+def annotate_locus_tags(df, gbfilepath):
+    """Add gene product annotations from gbfile to passed dataframe
+
+    The annotations are added/placed in a column called "annotation", and are
+    identified on the basis of the "locus_tag" column
+    """
+    products = dict()
+    for record in SeqIO.parse(gbfilepath, 'genbank'):
+        products.update({ft.qualifiers['gene'][0]: ft.qualifiers['product'][0]
+                         for ft in record.features if
+                         ('gene' in ft.qualifiers and
+                          'product' in ft.qualifiers)})
+    df['annotation'] = df['locus_tag'].apply(get_annotation,
+                                             args=(products,))
+    return df
