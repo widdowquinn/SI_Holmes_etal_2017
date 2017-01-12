@@ -133,7 +133,9 @@ Finally, use the `join_multiplexed_data.py` script to combine prediction output 
                            -l 10-fold_CV_join_data.log
 ```
 
-This combined data can then be used as input for the notebook `03-model_validation.ipynb`.
+The combined data produced in this way can then be used as input for the notebook `03-model_validation.ipynb`.
+
+* `03-model_validation.ipynb`: this will conduct analyses on the combined output from 10-fold crossvalidation on the input dataset in `normalised_array_data.tab`. These analyses estimate the ability of the model to predict unseen 'output' array intensities by training it on 90% of the data at any one time, and testing it on the remaining 10% of the dataset.
 
 ### NOTE: PRNG seeds
 
