@@ -16,6 +16,7 @@ from matplotlib import pyplot as plt
 
 import numpy as np
 import pandas as pd
+import pickle
 import random
 import scipy
 import seaborn as sns
@@ -390,3 +391,46 @@ def annotate_locus_tags(df, gbfilepath):
     df['annotation'] = df['locus_tag'].apply(get_annotation,
                                              args=(products,))
     return df
+
+
+def parse_full_fit(picklefilename, datafilename):
+    """Parses the full model fit into a Pandas dataframe which is returned
+
+    The returned dataframe has columns for mean, SEM, median, and 2.5, 25,
+    75, 97.5 percentiles
+    """
+    # Load fit
+    with open(picklefilename, 'rb') as ifh:
+        fit = pickle.load(ifh)
+    indata = pd.read_csv(datafilename, sep="\t")
+    locus_tags = indata['locus_tag'].unique()
+
+    # Get dataframes for each fitted variable summary, and join them
+    dflist = []
+    for varname in ['a', 'b', 'g', 'd']:
+        dflist.append(extract_variable_summaries(fit, varname, locus_tags))
+
+    return pd.concat(dflist, axis=1)
+
+
+def plot_errors(df):
+    """Plot distributions of absolute and relative error in crossvalidation"""
+    fig, axes = plt.subplots(1, 2, figsize=(12,4))
+    fig.subplots_adjust(hspace=.25)
+    axes = axes.ravel()
+    for ttl, col, ax in zip(("absolute error", "relative error"),
+                            ("y_pred_abs_error", "y_pred_rel_error"),
+                            axes):
+        ax.set_title(ttl)
+        sns.boxplot(df[col], ax=ax)    
+
+def plot_error_vs_column(df, colname):
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+    axes = axes.ravel()
+    for ttl, col, ax in zip(("absolute error", "relative error"),
+                             ("y_pred_abs_error", "y_pred_rel_error"),
+                             axes):
+        ax.set_title("{0} v {1}".format(ttl, colname))
+        ax.set_xlabel(colname)
+        ax.set_ylabel(ttl)
+        ax.scatter(df[colname], df[col], alpha=0.05)
