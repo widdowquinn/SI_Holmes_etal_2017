@@ -38,8 +38,11 @@ data {
   int<lower=0> M;  # number of training datapoints
   int<lower=0> N;  # number of test datapoints
   int<lower=0> J;  # number of unique probes
+  int<lower=0> K;  # number of arrays
   int<lower=1, upper=J> tagidx_train[M];  # probe indices (training)
   int<lower=1, upper=J> tagidx_test[N];   # probe indices (test)
+  int<lower=1, upper=K> arrayidx_train[M];
+  int<lower=1, upper=K> arrayidx_train[N];
   vector[M] t_train;
   vector[N] t_test;
   vector[M] x_train;  # training input datapoints
@@ -66,13 +69,13 @@ transformed parameters{
   vector[N] mu_pred;  
 
   for (i in 1:M)
-    y_hat[i] = a[tagidx_train[i]] + b[tagidx_train[i]] * x_train[i] +
-               g[tagidx_train[i]] * t_train[i] +
+    y_hat[i] = a[arrayidx_train[i]] + b[tagidx_train[i]] * x_train[i] +
+               g[arrayidx_train[i]] * t_train[i] +
                d[tagidx_train[i]] * t_train[i] * x_train[i];
     
   for (j in 1:N)
-    mu_pred[j] = a[tagidx_test[j]] + b[tagidx_test[j]] * x_test[j] +
-                 g[tagidx_test[j]] * t_test[j] +
+    mu_pred[j] = a[arrayidx_test[j]] + b[tagidx_test[j]] * x_test[j] +
+                 g[arrayidx_test[j]] * t_test[j] +
                  d[tagidx_test[j]] * t_test[j] * x_test[j];
 }
 model {
@@ -187,12 +190,18 @@ def main():
     tag_ids = traindata['locus_tag'].unique()
     ntags = len(tag_ids)
 
+    arrays = data['repXtrt'].unique()
+    narrays = len(arrays)
+
     # Create data dictionary for model
     datadict = {'M': len(traindata),
                 'N': len(testdata),
                 'J': ntags,
+                'K': narrays,
                 'tagidx_train': traindata['locus_tag_index'] + 1,
                 'tagidx_test': testdata['locus_tag_index'] + 1,
+                'arrayidx_train': traindata['repXtrt_index'] + 1,
+                'arrayidx_test': testdata['repXtrt_index'] + 1,
                 't_train': traindata['treatment'],
                 't_test': testdata['treatment'],                        
                 'x_train': traindata['log_input'],
