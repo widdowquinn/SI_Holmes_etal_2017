@@ -42,7 +42,7 @@ data {
   int<lower=1, upper=J> tagidx_train[M];  # probe indices (training)
   int<lower=1, upper=J> tagidx_test[N];   # probe indices (test)
   int<lower=1, upper=K> arrayidx_train[M];
-  int<lower=1, upper=K> arrayidx_train[N];
+  int<lower=1, upper=K> arrayidx_test[N];
   vector[M] t_train;
   vector[N] t_test;
   vector[M] x_train;  # training input datapoints
