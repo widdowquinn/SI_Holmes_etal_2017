@@ -190,7 +190,7 @@ def main():
     tag_ids = traindata['locus_tag'].unique()
     ntags = len(tag_ids)
 
-    arrays = data['repXtrt'].unique()
+    arrays = traindata['repXtrt'].unique()
     narrays = len(arrays)
 
     # Create data dictionary for model
