@@ -21,6 +21,8 @@ import random
 import scipy
 import seaborn as sns
 
+from collections import defaultdict
+
 from Bio import SeqIO
 
 # PRNG seed
@@ -298,31 +300,65 @@ def extract_df_variable_summary(df, varname, index=None):
 
 
 def extract_variable_summaries(obj, otype='fit',
-                               varnames=['a', 'b', 'g', 'd'], indices=None):
-    """Return named tuple of parameter estimate summaries"""
+                               varnames=['a', 'b', 'g', 'd'],
+                               indices=None,
+                               data=None):
+    """Return dataframe of parameter estimate summaries
+
+    For this modelling there is a specific issue with estimating variables on
+    arrays (length 6), and estimating them on probes (length around 6000),
+    and having to combine them.
+
+    The calls to extract_*_variable_summary() return a dataframe for each
+    variable. We broadcast values for a and g across the probe dataset, and
+    join values for b and d directly.
+    """
     # Choice of function depends on object being passed
     functions = {'fit': extract_fit_variable_summary,
                  'df': extract_df_variable_summary}
 
-    # Get dataframes for each fitted variable summary, and join them
-    dflist = []
+    # Get dataframes for each fitted variable summary, keyed by variable name
+    dfdict = defaultdict()
     for varname, index in zip(varnames, indices):
-        dflist.append(functions[otype](obj, varname, index))
+        dfdict[varname] = functions[otype](obj, varname, index)
+        dfdict[varname].reset_index(inplace=True)
 
-    df = pd.concat(dflist, axis=1)
-    df.reset_index(inplace=True)
-    df.rename(columns={'index': 'locus_tag'}, inplace=True)
-    df = df.sort_values('locus_tag')
-    return df
+    # Broadcast parameter estimates across probes
+    df = pd.merge(data, dfdict['a'],
+                  left_on='repXtrt', right_on='index')
+    df = pd.merge(df, dfdict['b'],
+                  left_on='locus_tag', right_on='index')
+    df = pd.merge(df, dfdict['g'],
+                  left_on='repXtrt', right_on='index')
+    df = pd.merge(df, dfdict['d'],
+                  left_on='locus_tag', right_on='index')
+    
+    # Broadcast parameter estimates across locus tags
+    lt = pd.DataFrame(data['locus_tag'].unique())
+    lt.columns = ['locus_tag']
+    lt = pd.merge(lt, dfdict['b'],
+                  left_on='locus_tag', right_on='index')
+    lt = pd.merge(lt, dfdict['d'],
+                  left_on='locus_tag', right_on='index')
+    
+    df.drop('index_x', 1, inplace=True)
+    df.drop('index_y', 1, inplace=True)    
+    lt.drop('index_x', 1, inplace=True)
+    lt.drop('index_y', 1, inplace=True)    
+
+    lt.sort('locus_tag', inplace=True)
+
+    return df, lt
 
 
-def boxplot_medians(estimates):
+def boxplot_medians(estimates, varnames=['a', 'b', 'g', 'd']):
     """Plot 2x2 boxplot of parameter median estimates"""
-    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+    fig, axes = plt.subplots(int(len(varnames)/2), 2,
+                             figsize=(12, 2 * len(varnames)))
     axes = axes.ravel()
     fig.subplots_adjust(hspace=0.3)
 
-    for idx, varname in enumerate(['a', 'b', 'g', 'd']):
+    for idx, varname in enumerate(varnames):
         sns.boxplot(estimates['{0}_median'.format(varname)],
                     ax=axes[idx])
         axes[idx].set_title("Median {0}".format(varname))
@@ -338,12 +374,12 @@ def split_estimates(df, org):
 
 
 def plot_treatment_vs_control(df):
-    """Plot median treatment vs control parameters in a 2x2 matrix"""
-    fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+    """Plot median treatment vs control parameters"""
+    fig, axes = plt.subplots(1, 2, figsize=(12, 8))
     axes = axes.ravel()
     fig.subplots_adjust(hspace=0.3)
     
-    for idx, xvar, yvar, ax in zip(range(4),
+    for idx, xvar, yvar, ax in zip(range(2),
                                    ['a_median', 'a_median',
                                     'b_median', 'b_median'],
                                    ['g_median', 'd_median',
@@ -400,14 +436,14 @@ def get_annotation(tag, products):
 
 
 def annotate_locus_tags(df, gbfilepath):
-    """Add gene product annotations from gbfile to passed dataframe
+    """Add gene product annotations from gbfiles to passed dataframe
 
     The annotations are added/placed in a column called "annotation", and are
     identified on the basis of the "locus_tag" column
     """
     products = dict()
     for record in SeqIO.parse(gbfilepath, 'genbank'):
-        products.update({ft.qualifiers['gene'][0]: ft.qualifiers['product'][0]
+        products.update({ft.qualifiers['gene'][0]:ft.qualifiers['product'][0]
                          for ft in record.features if
                          ('gene' in ft.qualifiers and
                           'product' in ft.qualifiers)})
