@@ -222,6 +222,26 @@ def reduce_dataset(df, colname, n=2000, seed=True):
     return reduced
 
 
+def reduce_dataset_by_column_value(df, colname, values):
+    """Returns the passed dataframe, with only the passed column values"""
+    col_ids = df[colname].unique()
+    nvals = len(col_ids)
+
+    # Reduce dataset
+    reduced = df.loc[df['locus_tag'].isin(values)]
+
+    # create indices and values for probes
+    new_ids = reduced[colname].unique()
+    nvals = len(new_ids)
+    new_lookup = dict(zip(new_ids, range(nvals)))
+
+    # add data column with probe index from probe_lookup
+    reduced['{0}_index'.format(colname)] =\
+        reduced[colname].replace(new_lookup).values
+
+    return reduced
+
+
 def extract_fit_variable_summary(fit, varname, index=None):
     """Returns summary information for a variable in the passed Stan fit object
 
@@ -277,7 +297,8 @@ def extract_df_variable_summary(df, varname, index=None):
                          '%s_75pc' % varname: perc_75})
 
 
-def extract_variable_summaries(obj, otype='fit', index=None):
+def extract_variable_summaries(obj, otype='fit',
+                               varnames=['a', 'b', 'g', 'd'], indices=None):
     """Return named tuple of parameter estimate summaries"""
     # Choice of function depends on object being passed
     functions = {'fit': extract_fit_variable_summary,
@@ -285,7 +306,7 @@ def extract_variable_summaries(obj, otype='fit', index=None):
 
     # Get dataframes for each fitted variable summary, and join them
     dflist = []
-    for varname in ['a', 'b', 'g', 'd']:
+    for varname, index in zip(varnames, indices):
         dflist.append(functions[otype](obj, varname, index))
 
     df = pd.concat(dflist, axis=1)
@@ -364,6 +385,8 @@ def plot_parameter(df, varname, title='', thresh=0):
             color = 'r-'
         elif val > thresh:
             color = 'g-'
+        else:
+            color = 'k-'
         plt.plot([idx, idx], [vlo, vhi], color, alpha=0.4)
     plt.title("{0} [threshold: {1:.2f}]".format(title, thresh))
     plt.xlim(0, len(df));
