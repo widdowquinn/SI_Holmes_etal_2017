@@ -1,0 +1,53 @@
+INFO: # ./join_multiplexed_data.py logfile
+INFO: # Mon Jan 23 12:22:00 2017
+INFO: Namespace(indirname='2017-01-22_10-fold_CV', logfile='2017-01-22_10-fold_CV_join_data.log', outfilename='2017-01-22_10-fold_CV.tab', verbose=True)
+INFO: Looking for test data/pickle files in 2017-01-22_10-fold_CV
+INFO: Identified input files:
+	2017-01-22_10-fold_CV/multiplex00006/test.tab, 2017-01-22_10-fold_CV/multiplex00006/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00001/test.tab, 2017-01-22_10-fold_CV/multiplex00001/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00008/test.tab, 2017-01-22_10-fold_CV/multiplex00008/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00005/test.tab, 2017-01-22_10-fold_CV/multiplex00005/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00010/test.tab, 2017-01-22_10-fold_CV/multiplex00010/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00004/test.tab, 2017-01-22_10-fold_CV/multiplex00004/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00002/test.tab, 2017-01-22_10-fold_CV/multiplex00002/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00003/test.tab, 2017-01-22_10-fold_CV/multiplex00003/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00007/test.tab, 2017-01-22_10-fold_CV/multiplex00007/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00009/test.tab, 2017-01-22_10-fold_CV/multiplex00009/prediction.pkl
+	2017-01-22_10-fold_CV/multiplex00000/test.tab, 2017-01-22_10-fold_CV/multiplex00000/prediction.pkl
+INFO: Loading pickle files into dataframe
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00006/test.tab, results from 2017-01-22_10-fold_CV/multiplex00006/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00001/test.tab, results from 2017-01-22_10-fold_CV/multiplex00001/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00008/test.tab, results from 2017-01-22_10-fold_CV/multiplex00008/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00005/test.tab, results from 2017-01-22_10-fold_CV/multiplex00005/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00010/test.tab, results from 2017-01-22_10-fold_CV/multiplex00010/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00004/test.tab, results from 2017-01-22_10-fold_CV/multiplex00004/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00002/test.tab, results from 2017-01-22_10-fold_CV/multiplex00002/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00003/test.tab, results from 2017-01-22_10-fold_CV/multiplex00003/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00007/test.tab, results from 2017-01-22_10-fold_CV/multiplex00007/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00009/test.tab, results from 2017-01-22_10-fold_CV/multiplex00009/prediction.pkl
+INFO: Loading test data from 2017-01-22_10-fold_CV/multiplex00000/test.tab, results from 2017-01-22_10-fold_CV/multiplex00000/prediction.pkl
+INFO: Loaded pickled data.
+Dataframe size: 49872 x 20
+INFO: Dataframe columns:
+	input
+	locus_tag
+	locus_tag_index
+	log_input
+	log_output
+	match
+	output
+	probe
+	probe_index
+	repXtrt
+	repXtrt_index
+	replicate
+	treatment
+	y_pred_25pc
+	y_pred_5pc
+	y_pred_75pc
+	y_pred_95pc
+	y_pred_mean
+	y_pred_median
+	y_pred_sem
+INFO: Writing data to 2017-01-22_10-fold_CV.tab
+INFO: Exiting: Mon Jan 23 12:23:38 2017
