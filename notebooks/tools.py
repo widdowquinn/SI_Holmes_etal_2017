@@ -428,9 +428,9 @@ def plot_parameter(df, varname, title='', thresh=0):
     plt.xlim(0, len(df));
 
 
-def get_annotation(tag, products):
+def get_annotation(tag, anndict):
     try:
-        return products[tag]
+        return anndict[tag]
     except KeyError:
         return None
 
@@ -442,13 +442,20 @@ def annotate_locus_tags(df, gbfilepath):
     identified on the basis of the "locus_tag" column
     """
     products = dict()
+    startpos = defaultdict(int)
     for record in SeqIO.parse(gbfilepath, 'genbank'):
-        products.update({ft.qualifiers['gene'][0]:ft.qualifiers['product'][0]
+        products.update({ft.qualifiers['locus_tag'][0]:ft.qualifiers['product'][0]
                          for ft in record.features if
-                         ('gene' in ft.qualifiers and
+                         (ft.type == 'CDS' and
                           'product' in ft.qualifiers)})
+        startpos.update({ft.qualifiers['locus_tag'][0]:
+                         int(ft.location.nofuzzy_start)
+                         for ft in record.features if
+                         ft.type == 'gene'})
     df['annotation'] = df['locus_tag'].apply(get_annotation,
                                              args=(products,))
+    df['startpos'] = df['locus_tag'].apply(get_annotation,
+                                           args=(startpos,))
     return df
 
 
