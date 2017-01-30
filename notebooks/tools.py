@@ -418,7 +418,7 @@ def plot_parameter(df, varname, title='', thresh=0):
         if vlo < thresh < vhi:
             color = 'b-'
         elif val < thresh:
-            color = 'r-'
+            color = 'm-'
         elif val > thresh:
             color = 'g-'
         else:
