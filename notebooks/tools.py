@@ -500,3 +500,78 @@ def plot_error_vs_column(df, colname):
         ax.set_xlabel(colname)
         ax.set_ylabel(ttl)
         ax.scatter(df[colname], df[col], alpha=0.05)
+
+
+def plot_probe_predictions(locustag, df):
+    """Plot prediction range and measured value for a specific gene"""
+    ltdata = df.loc[df['locus_tag'] == locustag].sort_values(['probe',
+                                                              'treatment',
+                                                              'replicate'])
+    plt.scatter(range(len(ltdata)), ltdata['log_output'], color='k')
+    for idx, obs, plo, pmd, phi in zip(range(len(ltdata)),
+                                       ltdata['log_output'],
+                                       ltdata['y_pred_5pc'],
+                                       ltdata['y_pred_median'],
+                                       ltdata['y_pred_95pc']):
+        if plo < obs < phi:
+            lcolor = 'b-'
+            pcolor = 'b.'
+        else:
+            lcolor = 'r-'
+            pcolor = 'r.'
+        plt.plot([idx, idx], [plo, phi], lcolor)
+        plt.plot([idx, idx], [pmd, pmd], pcolor)
+    plt.xticks(range(len(ltdata)), ltdata['probe'], rotation=90)
+    plt.xlim(-1, len(ltdata))
+    plt.title("Probe predictions: {0}, delta: {1}".format(locustag,
+                                       ltdata['d_median'].unique()))
+
+
+def plot_locustag_predictions(df, tag):
+    """Plot prediction range and measured output for a locus tag
+    
+    Produce one axis per probe
+    """
+    ltdata = df.loc[df['locus_tag'] == tag].sort_values(['treatment',
+                                                         'probe',
+                                                         'replicate'])
+    #print(ltdata)
+    probes = list(ltdata['probe'].unique())
+    numprobes = len(probes)
+    fig, axes = plt.subplots(1, numprobes, figsize=(6 * numprobes, 6))
+    try:
+        axes = axes.ravel()
+    except AttributeError:
+        axes = (axes,)
+    for ttl, arr, ax in zip(probes,
+                            [ltdata[ltdata['probe'] == p] for p in probes],
+                            axes):
+        # Plot input (grey) and output (black) measurements
+        ax.scatter(range(len(arr)), arr['log_input'], color='k', alpha=0.2)
+        ax.scatter(range(len(arr)), arr['log_output'], color='k')
+        # Plot prediciton errors
+        for idx, obs, trt, plo, pmd, phi in zip(range(len(arr)),
+                                                arr['log_output'],
+                                                arr['treatment'],
+                                                arr['y_pred_5pc'],
+                                                arr['y_pred_median'],
+                                                arr['y_pred_95pc']):
+            if plo < obs < phi:
+                if trt == 1:
+                    lcolor = 'b-'
+                    pcolor = 'b.'
+                else:
+                    lcolor = 'y-'
+                    pcolor = 'y.'
+            else:
+                if trt == 1:
+                    lcolor = 'r-'
+                    pcolor = 'r.'
+                else:
+                    lcolor = 'g-'
+                    pcolor = 'g.'
+            ax.plot([idx, idx], [plo, phi], lcolor)
+            ax.plot([idx, idx], [pmd, pmd], pcolor)
+        ax.set_title("{2} probe predictions: {0}, delta: {1}".format(ttl,
+                                                arr['d_median'].unique(),
+                                                                     tag))
