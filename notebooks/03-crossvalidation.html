@@ -11800,11 +11800,11 @@ div#notebook {
 <p><a id="summary"></a></p>
 <h2 id="Crossvalidation-summary">Crossvalidation summary<a class="anchor-link" href="#Crossvalidation-summary">&#182;</a></h2><p>We will load predicted and measured <em>output</em> probe intensity data from a 10-fold crossvalidation, performed as described in the file <code>README.md</code> (the data provided in this repository was obtaind from a run on the JHI cluster).</p>
 <p><br /><div class="alert-success">
-**The Stan model used to generate the crossvalidation results is identical in form to that used in the notebook `02-full_model_fit.ipynb`, except that it is fit ten times, each time on a random 90% of the data, and a prediction made for the *output* probe intensity of the remaining 10% of the data, given the measured *input* probe intensities as a predictor. The results of these ten runs are combined in the file `10-fold_CV.tab`.**
+<b>The Stan model used to generate the crossvalidation results is identical in form to that used in the notebook `02-full_model_fit.ipynb`, except that it is fit ten times, each time on a random 90% of the data, and a prediction made for the *output* probe intensity of the remaining 10% of the data, given the measured *input* probe intensities as a predictor. The results of these ten runs are combined in the file `10-fold_CV.tab`.</b>
 </div></p>
 <p>We can assess the applicability and success of the Stan model by investigating how well it can predict the measured <em>output</em> intensity of a probe, given its measured <em>input</em> intensity. We are conducting crossvalidation on the original dataset, and we consider a prediction to be "correct" if the measured <em>output</em> intensity lies within the 90% credibility interval of the <em>predicted output</em> intensity.</p>
 <p><br /><div class="alert-success">
-**We assess the performance of the model in two ways.**
+<b>We assess the performance of the model in two ways.</b>
 </div></p>
 <ol>
 <li>Failed predictions as those predictions of output intensity that do not include the measured input intensity in their 90% CI. </li>
@@ -12486,7 +12486,7 @@ The crossvalidation data has 49872 rows (one for each combintation of probe, tre
 <p><a id="errdist"></a></p>
 <h3 id="Error-distributions">Error distributions<a class="anchor-link" href="#Error-distributions">&#182;</a></h3><p>We inspect the distribution of these errors directly by plotting.</p>
 <p><br /><div class="alert-success">
-**There are some strongly outlying points with large error, but most prediction errors, either relative or absolute, are close to zero.**
+<b>There are some strongly outlying points with large error, but most prediction errors, either relative or absolute, are close to zero.</b>
 </div></p>
 
 </div>
@@ -15589,7 +15589,7 @@ rkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert-success">
-**The plots above indicate that absolute prediction errors are small for probes with intensities of 6 or greater. In particular, probes with strong intensities have very low absolute and relative error.**
+<b>The plots above indicate that absolute prediction errors are small for probes with intensities of 6 or greater. In particular, probes with strong intensities have very low absolute and relative error.</b>
 </div>
 </div>
 </div>
@@ -24178,7 +24178,7 @@ These plots show that a large relative prediction error is associated mainly wit
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert-success">
-**This identifies 4048/49872 probe predictions (an 8% misprediction rate!), covering 1101 locus_tags in total.**
+<b>This identifies 4048/49872 probe predictions (an 8% misprediction rate!), covering 1101 locus_tags in total.</b>
 </div>
 </div>
 </div>
@@ -24809,7 +24809,7 @@ IiIiImIqJaQiIiIiYiolpCIiIiJiKiWkIiIiImKq/wdL7iinBtfR2gAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert-danger">
-**We find that 389/1566 of our probes (around 25% of predictions, covering 77 of the 115 locus tags with an estimated positive effect) have measured output intensity that lies outwith the 90% CI for the crossvalidation prediction. This is a considerably higher rate than for the dataset as a whole.**
+<b>We find that 389/1566 of our probes (around 25% of predictions, covering 77 of the 115 locus tags with an estimated positive effect) have measured output intensity that lies outwith the 90% CI for the crossvalidation prediction. This is a considerably higher rate than for the dataset as a whole.</b>
 </div><p>Plotting the distribution of the number of probes in error for each locus tag also shows a noisier distribution to that for the main dataset, where some predictions have a much larger number of probe predictions that appear to be in error:</p>
 
 </div>
@@ -25654,10 +25654,10 @@ Type M errors: 389
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert-success">
-**There are no observed Type S errors.**
+<b>There are no observed Type S errors.</b>
 </div><p>All errors in the predicted output intensity are Type M errors: errors in the predicted effect magnitude, where the effect is observed to be in the correct direction, with respect to the input intensity.</p>
 <div class="alert-success">
-**We should, therefore, be confident that our predictions of $\delta$ are accurate in terms of their positive direction.**
+<b>We should, therefore, be confident that our predictions of $\delta$ are accurate in terms of their positive direction.</b>
 </div>
 </div>
 </div>
@@ -26604,7 +26604,7 @@ RK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert-success">
-**The violinplot of errors for probes whose observed output isn't in the 90% CI for the predicted output indicates that most errors are less than 2 log units from the observed value in either direction. The number of positive and negative errors are also very similar, suggesting that there is no systematic bias towards over- or under-estimation.**
+<b>The violinplot of errors for probes whose observed output isn't in the 90% CI for the predicted output indicates that most errors are less than 2 log units from the observed value in either direction. The number of positive and negative errors are also very similar, suggesting that there is no systematic bias towards over- or under-estimation.</b>
 </div>
 </div>
 </div>
@@ -27146,8 +27146,9 @@ B1g+zMtlER20AAAAAElFTkSuQmCC
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert-success">
-**This identifies 10 questionable locus tags, with 110 Type M probe errors, in total.**
-</div><p>We use the function <code>plot_locustag_predictions()</code> to visualise the prediction results for these genes directly:</p>
+<b>This identifies 10 questionable locus tags, with 110 Type M probe errors, in total.</b>
+</div><p>We use the function <code>plot_locustag_predictions()</code> to visualise the prediction results for these genes directly. In these plots, values 0-2 indicate control replicates, and values 3-5 treatment replicates. The grey points show measured input intensity for the probe, and the black points show measured output intensity. The coloured points show predicted median values, and the bars indicate the 90% credibility interval for the prediction.</p>
+<p>Yellow and blue bars indicate that the observed output intensity lies within the 90% CI; green and red bars indicate that the observed output value lies outwith the 90% CI.</p>
 
 </div>
 </div>

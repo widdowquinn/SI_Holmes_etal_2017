@@ -11781,22 +11781,21 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Experiment summary and interpretation <a id="summary"></h2>
-<p>The experiment involves measuring changes in microarray probe intensity before and after a pool of bacteria is subjected to one of two processes:</p>
+<h2 id="Experiment-summary-and-interpretation-">Experiment summary and interpretation <a id="summary" /><a class="anchor-link" href="#Experiment-summary-and-interpretation-">&#182;</a></h2><p>The experiment involves measuring changes in microarray probe intensity before and after a pool of bacteria is subjected to one of two processes:</p>
 <ol>
 <li>a sample from the pool is grown in media to a defined OD, then subsampled. This growth/subsample process is repeated <em>n</em> times. [<em>control</em>]</li>
 <li>a sample from the pool is applied to plant leaves, subsampled, and that subsample grown in media to a defined OD, then subsampled. This passage/subsample/growth/subsample process is repeated <em>n</em> times. [<em>treatment</em>]</li>
 </ol>
 <p>In a single replicate, the microarray is exposed to genomic DNA extracted from the pool (i) before the experiment begins, and (ii) after the experiment concludes. Three replicates are performed.</p>
 <p><br /><div class="alert-success">
-**All genes in all samples go through the *growth and subsampling* part of the experiment, and we wish to estimate the effect of *passage and subsampling* on individual genes.**
+<b>All genes in all samples go through the *growth and subsampling* part of the experiment, and we wish to estimate the effect of *passage and subsampling* on individual genes.</b>
 </div></p>
 <p>The pool of bacteria comprises <em>E. coli</em> DH10B as a carrier organism. The pool is heterogeneous, in that individual cells also contain BACs encoding random stretches of the <em>E. coli</em> Sakai chromosome. We therefore expect carrier organism genes to be unaffected by passage (treatment), and for any effects to be detectable only for genes that originate from <em>E. coli</em> Sakai.</p>
 <p><br /><div class="alert-success">
-**We expect that genes conferring a phenotypic/selective advantage only for association with the plant should be enriched at the end of the treatment experiment, but not at the end of the control experiment. Sakai genes that are enriched in both treatment and control experiments may be generally advantageous for growth, but those giving a selective advantage on passage through the plant could be specifically adaptive in an environmental context.** 
+<b>We expect that genes conferring a phenotypic/selective advantage only for association with the plant should be enriched at the end of the treatment experiment, but not at the end of the control experiment. Sakai genes that are enriched in both treatment and control experiments may be generally advantageous for growth, but those giving a selective advantage on passage through the plant could be specifically adaptive in an environmental context.</b> 
 </div></p>
 <p><br /><div class="alert-danger">
-**As the BACs describe contiguous regions of the *E. coli* Sakai genome, there is the possibility that linkage disequilibrium could result in some genes that do not confer an advantage by themselves apparently displaying enrichment after treatment.**
+<b>As the BACs describe contiguous regions of the *E. coli* Sakai genome, there is the possibility that linkage disequilibrium could result in some genes that do not confer an advantage by themselves apparently displaying enrichment after treatment.</b>
 </div></p>
 <p>If the biological function conferring an advantage during passage is encoded by a suite of coregulated genes in an operon, we might expect all members of this suite to show evidence of enrichment after passage. It is likely that clusters of enrichment for operons or regulons post-passage will be seen in the results. Although we are not accounting for this clustering or association by operon directly in this model, it is a possible additional hierarchical term in future iterations of the model.</p>
 <p>We should expect there to be a selective burden to the carriage of additional non-functional gDNA as BACs, so we might also anticipate a slightly negative effect on recovery under <em>control</em> conditions.</p>
@@ -11871,9 +11870,10 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Building the model <a id="building"></h2>
-<p>We assume that each array probe $i$ (array probes take a unique values of $i$ in the context of the entire experiment; that is, $i$ is unique for probe X replicate X treatment) measures hybridisation of genomic DNA (gDNA) in the sample that corresponds to a single gene $j[i]$, and that the measured intensity of probe $i$ relates directly to the corresponding amount of gDNA in the sample. There may be multiple probes relating to a single gene, so it is possible that $j[p] = j[q], p \neq q$. <div class="alert-success">**This establishes a basis for pooling probe-level effects as samples of the gene-level effect.**</div></p>
-
+<h2 id="Building-the-model-">Building the model <a id="building" /><a class="anchor-link" href="#Building-the-model-">&#182;</a></h2><p>We assume that each array probe $i$ (array probes take a unique values of $i$ in the context of the entire experiment; that is, $i$ is unique for probe X replicate X treatment) measures hybridisation of genomic DNA (gDNA) in the sample that corresponds to a single gene $j[i]$, and that the measured intensity of probe $i$ relates directly to the corresponding amount of gDNA in the sample. There may be multiple probes relating to a single gene, so it is possible that $j[p] = j[q], p \neq q$.</p>
+<div class="alert-success">
+<b>This establishes a basis for pooling probe-level effects as samples of the gene-level effect.</b>
+</div>
 </div>
 </div>
 </div>
@@ -11886,11 +11886,11 @@ div#notebook {
 $$y_i = \hat{y_i} + \epsilon_i$$$$\epsilon_i \sim N(0, \sigma_y^2) \implies y_i \sim N(\hat{y_i}, \sigma_y^2)$$<p>The relationship between the input and output DNA quantities measured by a single probe can be represented as $\hat{y_i} = f(x_i)$. That is to say, that the measured input DNA quantity $x_i$ is a <em>predictor</em> of the output quantity. This relationship will be modelled as the sum of two linear effects:</p>
 $$\textrm{control effect} = \alpha + \beta x$$$$\textrm{treatment effect} = \gamma + \delta x$$$$\hat{y_i} = \textrm{control effect}(x_i) + \textrm{treatment effect}(x_i) = \alpha + \beta x_i + \gamma + \delta x_i$$<p>As these are linear effects, we have intercept/offset parameters ($\alpha$, $\gamma$) and gradient/slope parameters ($\beta$, $\delta$).</p>
 <div class="alert-success">
-**Where $\beta$ or $\delta$ are large, they would indicate large $x_i$-dependent effects of the control (growth) and treatment (passage) parts of the experiment respectively.**
+<b>Where $\beta$ or $\delta$ are large, they would indicate large $x_i$-dependent effects of the control (growth) and treatment (passage) parts of the experiment respectively.</b>
 </div><p>As formulated above, the four parameters would be identical for all probes, but we are interested in estimating the control and treatment effects for individual genes, so we require a set of parameters for each gene (as it corresponds to probe $i$): $j[i]$. This is appropriate for the effects of growth/treatment that are specific to the levels of a single gene: $\beta$ and $\delta$.</p>
 <p>The remaining parameters $\alpha$ and $\gamma$, the offsets from zero for each probe, could be considered to be constant across each replicate of both control and treatment experiments. They are possibly more realistically considered to be different for each array (i.e. each combination of replicate and treatment).</p>
 <div class="alert-success">
-**The offset for any particular array can be hierarchically modelled as being drawn from a distribution representing all arrays, and we require one parameter for each of the arrays, so that for probe $i$ the corresponding array for that experiment is $k[i]$.**
+<b>The offset for any particular array can be hierarchically modelled as being drawn from a distribution representing all arrays, and we require one parameter for each of the arrays, so that for probe $i$ the corresponding array for that experiment is $k[i]$.</b>
 </div>
 </div>
 </div>
@@ -11903,7 +11903,7 @@ $$\textrm{control effect} = \alpha + \beta x$$$$\textrm{treatment effect} = \gam
 <p>As a result, we estimate $\alpha_{k[i]}$, $\beta_{j[i]}$, $\gamma_{k[i]}$, $\delta_{j[i]}$, and the relationship for each probe is modelled as:</p>
 $$\hat{y_i} = \textrm{control effect}_{j[i]}(x_i) + \textrm{treatment effect}_{j[i]}(x_i) = \alpha_{k[i]} + \beta_{j[i]} x_i + \gamma_{k[i]} + \delta_{j[i]} x_i$$<p>The parameters $\alpha_{k[i]}$, $\beta_{j[i]}$, $\gamma_{k[i]}$, $\delta_{j[i]}$ (and $\epsilon_i$) are to be estimated by the model fit.</p>
 <p><br /><div class="alert-success">
-**We assume that the values of each parameter, e.g. $\alpha_{k[i]}$, are drawn from a single *pooled distribution* for that parameter, $\alpha \sim \textrm{some distribution}$.** 
+<b>We assume that the values of each parameter, e.g. $\alpha_{k[i]}$, are drawn from a single *pooled distribution* for that parameter, $\alpha \sim \textrm{some distribution}$.</b>
 </div></p>
 <p>This pooling ensures that our fits are not completely pooled as a single estimate $\alpha_{k[i]} = \alpha$, which would imply that all parameter estimates are constant for all genes/arrays, a situation that would be completely uninformative for our goal to identify gene-level effects, and which would <em>underfit</em> our model. It also means that our estimates are not completely unpooled, which would allow all parameter estimates to vary independently. That situation would be equivalent to simultaneously fitting independent linear relationships to each gene, and so risk <em>overfitting</em> our model to the measured data.</p>
 
@@ -11916,7 +11916,7 @@ $$\hat{y_i} = \textrm{control effect}_{j[i]}(x_i) + \textrm{treatment effect}_{j
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><br /><div class="alert-warning">
-**NOTE: By using a *pooled distribution*, we allow a parameter estimate for each gene to influence the estimates of that parameter for all other genes in the experiment, constrained by an expected distribution of that parameter's values. To do this, we define a *prior distribution* for each parameter, but we do not specify its mean or variance, allowing the parameters of these *pooled distributions* also to be estimated in our model. **
+<b>NOTE: By using a *pooled distribution*, we allow a parameter estimate for each gene to influence the estimates of that parameter for all other genes in the experiment, constrained by an expected distribution of that parameter's values. To do this, we define a *prior distribution* for each parameter, but we do not specify its mean or variance, allowing the parameters of these *pooled distributions* also to be estimated when fitting our model.</b>
 </div></p>
 <p>For each parameter's <em>prior</em> we choose a Cauchy distribution, because it has fat tails and infinite variance. This does not constrain outlying and extreme values (those we are interested in) so much as other distributions (e.g. Normal or Student's <em>t</em>):</p>
 $$\alpha_{k[i]} \sim Cauchy(\mu_{\alpha}, \sigma_{\alpha}^2)$$$$\beta_{j[i]} \sim Cauchy(\mu_{\beta}, \sigma_{\beta}^2)$$$$\gamma_{k[i]} \sim Cauchy(\mu_{\gamma}, \sigma_{\gamma}^2)$$$$\delta_{j[i]} \sim Cauchy(\mu_{\delta}, \sigma_{\delta}^2)$$<p>Each parameter's prior distribution requires a fit of both its mean and variance, and these also become parameters in our model. The means are free to vary, but we assume that the variance of each parameter's prior can be drawn from a Uniform distribution on the range (0, 100):</p>
@@ -11930,7 +11930,7 @@ $$\sigma_{\alpha} \sim U(0, 100)$$$$\sigma_{\beta} \sim U(0, 100)$$$$\sigma_{\ga
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert-success">
-**We therefore construct the following model of the experiment:**
+<b>We therefore construct the following model of the experiment:</b>
 
 $$\hat{y_i} = \alpha_{k[i]} + \beta_{j[i]} x_i + \gamma_{k[i]} t_i + \delta_{j[i]} t_i x_i$$
 $$y_i \sim N(\hat{y_i}, \sigma_y^2)$$
@@ -11946,6 +11946,7 @@ $$\sigma_y \sim U(0, \infty)$$
 
 <ul>
 <li> $y_i$: measured intensity output on the array for probe $i$ (specific to each replicate)
+<li> $\hat{y_i}$: actual probe intensity for probe $i$ (specific to each replicate)
 <li> $x_i$: measured intensity input on the array for probe $i$ (specific to each replicate)
 <li> $t_i$: 0/1 pseudovariable indicating whether the probe $i$ was measured in a control (0) or treatment (1) experiment
 <li> $\alpha_{k[i]}$: control effect offset for treatment X replicate $k$ (used for probe $i$)
@@ -11960,7 +11961,7 @@ $$\sigma_y \sim U(0, \infty)$$
 <li> $\delta_{j[i]}$: treatment effect slope for gene $j[i]$
 <li> $\mu_{\delta}$: mean treatment effect slope for all genes
 <li> $\sigma_{\delta}$: treatment effect slope variance for all genes
-<li> $\epsilon_i$: error in the model prediction for probe $i$
+<li> $\sigma_y$: variance in measurement due to irreducible error
 </ul>
 </div>
 </div>
@@ -12027,10 +12028,10 @@ $$\sigma_y \sim U(0, \infty)$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Stan model construction <a id="build_stan"></h3>
-<p>We need to define <code>data</code>, <code>parameters</code> and our <code>model</code> for <a href="http://mc-stan.org/"><code>Stan</code></a>.</p>
-<p><br /><div class="alert-success">
-In the <code>data</code> block, we have:</p>
+<h3 id="Stan-model-construction-">Stan model construction <a id="build_stan" /><a class="anchor-link" href="#Stan-model-construction-">&#182;</a></h3><p>We need to define <code>data</code>, <code>parameters</code> and our <code>model</code> for <a href="http://mc-stan.org/"><code>Stan</code></a>.</p>
+<div class="alert-success">
+In the `data` block, we have:
+
 <ul>
 <li> `N`: `int`, the number of data points
 <li> `J`: `int`, the number of unique locus tags (`J` < `N`)
@@ -12040,7 +12041,10 @@ In the <code>data</code> block, we have:</p>
 <li> `t`: `vector[N]`, 0/1 control/treatment values for each probe
 <li> `x`: `vector[N]`, the input log(intensity) values
 <li> `y`: `vector[N]`, the output log(intensity) values
-</ul><p>In the <code>parameter</code> block, we have:</p>
+</ul>
+
+In the `parameter` block, we have:
+
 <ul>
 <li> `a`: `real vector[K]`, estimated offset effect on log(intensity) of the *control* for each array
 <li> `mu_a`: `real`, an unconstrained value to be fit that represents the mean of the Cauchy distribution for the *control* effect offset, for all arrays
@@ -12055,12 +12059,14 @@ In the <code>data</code> block, we have:</p>
 <li> `mu_d`: `real`, an unconstrained value to be fit that represents the mean of the Cauchy distribution for the slope for all locus tags due to *treatment*
 <li> `sigma_d`: `real<lower=0,upper=100>`, standard deviation of the Cauchy distribution for the slope for all locus tags due to *treatment*
 <li> `sigma`: `real<lower=0>`, the irreducible error in the experiment/model
-</ul><p>We also define a <code>transformed parameter</code>:</p>
-<p><ul></p>
-<p><li> <code>y_hat[i] &lt;- b[tag[i]] * x[i] + a[array[i]] + g[tag[i]] * t[i] + d[array[i]] * t[i] * x[i]</code>: the linear relationship describing $\hat{y}$, our estimate of experimental output intensity, which is subject to variance <code>sigma</code>.
-&lt;/ul&gt;
-&lt;/div&gt;</p>
+</ul>
 
+We also define a `transformed parameter`:
+
+<ul>
+<li> `y_hat[i] <- b[tag[i]] * x[i] + a[array[i]] + g[tag[i]] * t[i] + d[array[i]] * t[i] * x[i]`: the linear relationship describing $\hat{y}$, our estimate of experimental output intensity, which is subject to variance `sigma`.
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -12069,8 +12075,7 @@ In the <code>data</code> block, we have:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Define and fit the Stan model <a id="fit_stan"></h3>
-<p>In the cells below we define the model to be fit, in the Stan language, conduct the fit, and save the fit out to a pickled dataframe (or load it in from one, depending on which code is commented out).</p>
+<h3 id="Define-and-fit-the-Stan-model-">Define and fit the Stan model <a id="fit_stan" /><a class="anchor-link" href="#Define-and-fit-the-Stan-model-">&#182;</a></h3><p>In the cells below we define the model to be fit, in the Stan language, conduct the fit, and save the fit out to a pickled dataframe (or load it in from one, depending on which code is commented out).</p>
 
 </div>
 </div>
@@ -12162,7 +12167,7 @@ In the <code>data</code> block, we have:</p>
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># run stan fit - takes a few hours on my laptop</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># UNCOMMENT THIS TO RUN STAN FIT - takes a few hours on my laptop</span>
 <span class="c1">#treatment_fit = pystan.stan(model_code=treatment_model,</span>
 <span class="c1">#                            data=treatment_data_dict,</span>
 <span class="c1">#                            iter=1000, chains=2,</span>
@@ -12179,7 +12184,7 @@ In the <code>data</code> block, we have:</p>
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Save fit to file, for reuse</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># UNCOMMENT THIS TO SAVE FIT TO FILE</span>
 <span class="c1">#unpermutedChains = treatment_fit.extract()</span>
 <span class="c1">#unpermutedChains_df = pd.DataFrame([dict(unpermutedChains)])</span>
 <span class="c1">#pickle.dump(unpermutedChains_df, open(outfile, &#39;wb&#39;))</span>
@@ -12195,9 +12200,8 @@ In the <code>data</code> block, we have:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Extract the fit <a id="extract_stan"></h3>
-<p><br /><div class="alert-warning">
-**In the cells below we load in the contents of the pickled output (if the fit has already been run), and then extract useful summary information about mean, median, variance, and credibility intervals for the parameter estimates.**
+<h3 id="Extract-the-fit-">Extract the fit <a id="extract_stan" /><a class="anchor-link" href="#Extract-the-fit-">&#182;</a></h3><p><br /><div class="alert-warning">
+<b>In the cells below we load in the contents of the pickled output (if the fit has already been run), and then extract useful summary information about mean, median, variance, and credibility intervals for the parameter estimates.</b>
 </div></p>
 <div class="alert-success">
 <ul>
@@ -12214,7 +12218,7 @@ In the <code>data</code> block, we have:</p>
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Uncomment the line below to import the previously-fit model</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Import the previously-fit model</span>
 <span class="n">treatment_fit</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
 </pre></div>
 
@@ -12586,8 +12590,7 @@ In the <code>data</code> block, we have:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Inspecting the fit <a id="inspect_fit"></h2>
-<p>In the cells below, we visualise the fitted estimates for each of the parameters $\alpha$, $\beta$, $\gamma$, and $\delta$ as:</p>
+<h2 id="Inspecting-the-fit-">Inspecting the fit <a id="inspect_fit" /><a class="anchor-link" href="#Inspecting-the-fit-">&#182;</a></h2><p>In the cells below, we visualise the fitted estimates for each of the parameters $\alpha$, $\beta$, $\gamma$, and $\delta$ as:</p>
 <ul>
 <li>box plots of median estimates for each locus tag</li>
 <li>relationship between control and treatment effects in Sakai</li>
@@ -12602,8 +12605,7 @@ In the <code>data</code> block, we have:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Median parameter estimates <a id="median_estimates"></h3>
-<p>We first inspect the range of fitted estimates to get an overview of the relationships for the data as a whole, and then examine whether this relationship varies by <em>E. coli</em> isolate.</p>
+<h3 id="Median-parameter-estimates-">Median parameter estimates <a id="median_estimates" /><a class="anchor-link" href="#Median-parameter-estimates-">&#182;</a></h3><p>We first inspect the range of fitted estimates to get an overview of the relationships for the data as a whole, and then examine whether this relationship varies by <em>E. coli</em> isolate.</p>
 <p>Making boxplots for the full set of fitted parameter estimates, for both isolates:</p>
 
 </div>
@@ -13128,16 +13130,17 @@ SUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><br /><div class="alert-success">
-For this fit we can see that the estimates are all, in the main, tightly-distributed. Most estimated (median) values of $\alpha$ (control intercept), $\gamma$ (treatment intercept), and $\delta$ (treatment slope) are close to zero. Most estimated values of $\beta$ are close to (but slightly less than) unity.</p>
-<p><strong>This implies that:</strong></p>
-<p><ul></p>
-<p><li> <strong>The linear relationship between input and output intensity due to the control effects (growth only) is, for most genes in the experiment, a slight reduction of output intensity with respect to input intensity value, and on the whole the effect of the control/growth is neutral [median $\alpha$ ≈ 0, median $\beta$ ≈ 1]</strong></p>
-<p><li> <strong>For most genes in the experiment there is no treatment effect due to exposure to the plant [median $\gamma$ ≈ 0, median $\delta$ ≈ 0]</strong>
-&lt;/ul&gt;
-&lt;/div&gt;</p>
-<p><br /><div class="alert-warning">
-**There are, however, a considerable number of outlying median values for each parameter, which suggests that a number of genes have associated parameter values that are affected by either control (growth) or treatment (passage).**
+<div class="alert-success">
+For this fit we can see that the estimates are all, in the main, tightly-distributed. Most estimated (median) values of $\alpha$ (control intercept), $\gamma$ (treatment intercept), and $\delta$ (treatment slope) are close to zero. Most estimated values of $\beta$ are close to (but slightly less than) unity. 
+
+<b>This implies that:</b>
+
+<ul>
+<li> <b>The linear relationship between input and output intensity due to the control effects (growth only) is, for most genes in the experiment, a slight reduction of output intensity with respect to input intensity value, and on the whole the effect of the control/growth is neutral [median $\alpha$ ≈ 0, median $\beta$ ≈ 1]</b>
+<li> <b>For most genes in the experiment there is no treatment effect due to exposure to the plant [median $\gamma$ ≈ 0, median $\delta$ ≈ 0]</b>
+</ul>
+</div><p><br /><div class="alert-warning">
+<b>There are, however, a considerable number of outlying median values for each parameter, which suggests that a number of genes have associated parameter values that are affected by either control (growth) or treatment (passage).</b>
 </div></p>
 
 </div>
@@ -13409,11 +13412,11 @@ AAkI2AAAAJDA/wPJecEng5DnIgAAAABJRU5ErkJggg==
 <li>$0.93 < \beta < 0.98$</li>
 <li>$-0.065 < \delta < 0.045$</li>
 </ul>
-<p><br /><div class="alert-success">
-The control effect appears to be essentially <em>neutral</em>, in that the output intensity is almost a 1:1 linear relationship with the input intensity, but it is striking that the median estimates of $\gamma$ and $\delta$ are very close to zero, suggesting that passage (treatment) has almost no effect on this relationship, for any DH10B locus tag.</p>
-<p><strong>This is exactly what would be expected for DH10B as the carrier isolate.</strong>
-&lt;/div&gt;</p>
+<div class="alert-success">
+The control effect appears to be essentially *neutral*, in that the output intensity is almost a 1:1 linear relationship with the input intensity, but it is striking that the median estimates of $\gamma$ and $\delta$ are very close to zero, suggesting that passage (treatment) has almost no effect on this relationship, for any DH10B locus tag.
 
+<b>This is exactly what would be expected for DH10B as the carrier isolate.</b>
+</div>
 </div>
 </div>
 </div>
@@ -13721,11 +13724,11 @@ dhtfLoEAAAAASUVORK5CYII=
 <li>$0.2 < \beta < 1.4$</li>
 <li>$-1.5 < \delta < 0.5$</li>
 </ul>
-<p><br /><div class="alert-success">
-This indicates that we see the expected result, that strong variability of control and treatment effects are effectively confined to the Sakai BAC fragments.</p>
-<p><strong>It is expected that some genes/operons may be relatively advantageous in either growth (control) or passage (treatment) conditions, or both.</strong>
-&lt;/div&gt;</p>
+<div class="alert-success">
+This indicates that we see the expected result, that strong variability of control and treatment effects are effectively confined to the Sakai BAC fragments.
 
+<b>It is expected that some genes/operons may be relatively advantageous in either growth (control) or passage (treatment) conditions, or both.</b>
+</div>
 </div>
 </div>
 </div>
@@ -13736,7 +13739,7 @@ This indicates that we see the expected result, that strong variability of contr
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We can visualise the relationships between parameter estimates for control and treatment effects in a scatterplot of control effect ($\beta$) against treatment effect ($\delta) for each locus tag. This plot can be considered in four quadrants, which are delineated by the bulk of the data which describes orthogonal effects of locus tags on growth and treatment:</p>
 <p><br /><div class="alert-success">
-**(i.e. for most locus tags, there is *either* an effect on treatment or control, but *not both*)**
+<b>(i.e. for most locus tags, there is *either* an effect on treatment or control, but *not both*)</b>
 </div></p>
 <ul>
 <li>(upper left) positive effect on growth, negative effect for treatment: may be related to ability to use growth medium more efficiently</li>
@@ -14587,7 +14590,7 @@ ItH9f6a8XW/k6FXbAAAAAElFTkSuQmCC
 <p><br /><div class="alert-warning">
 The strong cross-like distribution indicates that most parameter estimates of $\beta$ or $\delta$ that vary from those of the bulk do so orthogonally in either *treatment* or *control* conditions, but not both. 
 <br /><br />
-**Where Sakai genes have an estimated effect under both conditions, this is typically negative for both treatment and control (lower left quadrant).**
+<b>Where Sakai genes have an estimated effect under both conditions, this is typically negative for both treatment and control (lower left quadrant).</b>
 </div></p>
 
 </div>
@@ -14598,8 +14601,7 @@ The strong cross-like distribution indicates that most parameter estimates of $\
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Identifying locus tags that confer an advantage under treatment and/or control <a id="locus_tags"></h2>
-<p>We use a 50% credibility interval to determine whether the effect of a gene on passage is likely to be positive. Under this assumption, we identify locus tags for which the median estimate of $\delta$ is positive, and the central 50% of the parameter estimates for $\delta$ (the 50% credibility interval) does not include zero. We label these locus tags as <code>trt_pos</code> in the dataframe.</p>
+<h2 id="Identifying-locus-tags-that-confer-an-advantage-under-treatment-and/or-control-">Identifying locus tags that confer an advantage under treatment and/or control <a id="locus_tags" /><a class="anchor-link" href="#Identifying-locus-tags-that-confer-an-advantage-under-treatment-and/or-control-">&#182;</a></h2><p>We use a 50% credibility interval to determine whether the effect of a gene on passage is likely to be positive. Under this assumption, we identify locus tags for which the median estimate of $\delta$ is positive, and the central 50% of the parameter estimates for $\delta$ (the 50% credibility interval) does not include zero. We label these locus tags as <code>trt_pos</code> in the dataframe.</p>
 <p><br /><div class="alert-success">
 These locus tags correspond to the genes that we should believe confer a selective advantage in passage/*treatment* (i.e. we require our estimate to be credibly positive). 
 </div></p>
@@ -14670,11 +14672,13 @@ both: 0
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>which indicates, with these assumptions, that:</p>
 <div class="alert-success">
-**<ul>
+<ul>
+<b>
 <li> 115 genes have a credible positive effect on passage (treatment)
 <li> 65 genes have a credible positive effect in the growth (control) step
 <li> no genes have a credible positive effect for both growth and treatment.
-</ul>**
+</b>
+</ul>
 </div><p>(this confirms our observation in the earlier scatterplot)</p>
 
 </div>
@@ -14685,8 +14689,7 @@ both: 0
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Plotting distribution of effects on the Sakai genome <a id="plot_effects"></h3>
-<p>We can show the estimated effects, and our confidence in those estimates, on a rough representation of the genome by plotting those values for each locus tag, sorted in order on the genome.</p>
+<h3 id="Plotting-distribution-of-effects-on-the-Sakai-genome-">Plotting distribution of effects on the Sakai genome <a id="plot_effects" /><a class="anchor-link" href="#Plotting-distribution-of-effects-on-the-Sakai-genome-">&#182;</a></h3><p>We can show the estimated effects, and our confidence in those estimates, on a rough representation of the genome by plotting those values for each locus tag, sorted in order on the genome.</p>
 <p>In the plots that follow, parameter estimates for each locus tag are rendered as points (the median estimate), with the 50% credibility interval for the estimate indicated as a vertical line. If the 50% CI includes a threshold value -  the median value for the bulk parameter estimate of $\beta$ or $\delta$ - then we consider that there is not strong evidence of an effect on survival due to that gene (compared to the bulk), and the interval is coloured blue.</p>
 <p>If the interval does not include the corresponding threshold value, then it is coloured either green for a <em>positive</em> effect, or magenta for a <em>negative</em> effect.</p>
 
@@ -20947,7 +20950,7 @@ These plots indicate that most Sakai genes do not produce parameter estimates th
 <br /><br />
 Where effects are seen they tend to cluster on the genome, which is as would be expected if operons or gene clusters with common function were responsible for producing an effect. This is suggestive that we are measuring a biological effect, rather than noise.
 <br /><br />
-**In general, several clusters of both positive and negative effects appear in the chromosome and pO157 plots for effects due to control ($\beta$) and treatment ($\delta$).**
+<b>In general, several clusters of both positive and negative effects appear in the chromosome and pO157 plots for effects due to control ($\beta$) and treatment ($\delta$).</b>
 </div>
 </div>
 </div>
@@ -26325,8 +26328,7 @@ AAAAAAAALFhWyh+QXHr/AAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Identifying Sakai candidates <a id="candidates"></h3>
-<p>From the information above, we can list the 180 Sakai genes/locus tags that appear to impart a positive selective effect on treatment/passage (the green points/bars in the plots immediately above).</p>
+<h3 id="Identifying-Sakai-candidates-">Identifying Sakai candidates <a id="candidates" /><a class="anchor-link" href="#Identifying-Sakai-candidates-">&#182;</a></h3><p>From the information above, we can list the 180 Sakai genes/locus tags that appear to impart a positive selective effect on treatment/passage (the green points/bars in the plots immediately above).</p>
 
 </div>
 </div>

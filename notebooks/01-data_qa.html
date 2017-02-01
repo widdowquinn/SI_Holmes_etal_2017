@@ -11826,8 +11826,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Microarray data <a id="microarray_data"></h2>
-<div class="alert alert-warning">
+<h2 id="Microarray-data-">Microarray data <a id="microarray_data" /><a class="anchor-link" href="#Microarray-data-">&#182;</a></h2><div class="alert alert-warning">
 Raw array data was previously converted to plain text comma-separated variable format from two `Excel` files:
 
 <ul>
@@ -11863,8 +11862,7 @@ Raw array data was previously converted to plain text comma-separated variable f
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Import array data <a id="import_data"></h3>
-
+<h3 id="Import-array-data-">Import array data <a id="import_data" /><a class="anchor-link" href="#Import-array-data-">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -11931,8 +11929,7 @@ We reduce the full dataset to only the raw intensity values. We also rename the 
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Data QA <a id="data_qa"></h2>
-<p>We expect that there is good agreement between input and output raw intensities for each replicate control or treatment experiment. We also expect that there should be good agreement across replicates within the controls, and within the treatment. We inspect this agreement visually with a matrix of scatterplots, below.</p>
+<h2 id="Data-QA-">Data QA <a id="data_qa" /><a class="anchor-link" href="#Data-QA-">&#182;</a></h2><p>We expect that there is good agreement between input and output raw intensities for each replicate control or treatment experiment. We also expect that there should be good agreement across replicates within the controls, and within the treatment. We inspect this agreement visually with a matrix of scatterplots, below.</p>
 <p>The <code>plot_correlation()</code> function can be found in the accompanying <code>tools.py</code> module.</p>
 
 </div>
@@ -17727,7 +17724,7 @@ AAAAJqLwDgAAAAAAAACAiSi8AwAAAAAAAABgov8Hcjoz0CS8ZWQAAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="alert alert-success">
-**Taken together, these plots indicate:**
+<b>Taken together, these plots indicate:</b>
 <ul>
 <li> the intensities of the control arrays are systematically larger than intensities for the treatment arrays, suggesting that the effects of noise may be proportionally greater for the treatment arrays. This might be a concern for reliably inferring enrichment or depletion in the treatment.
 <li> the control arrays are good candidates for quantile normalisation (QN; $r > 0.95$, with similar density distributions)
@@ -17742,17 +17739,16 @@ AAAAJqLwDgAAAAAAAACAiSi8AwAAAAAAAABgov8Hcjoz0CS8ZWQAAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Problematic probes <a id="problem_probes"></h3>
-<p><br /><div class="alert-warning">
-We can readily identify problematic probes in treatment replicate 3, as they are the only probes with intensity greater than 40,000.</p>
-<p>The problematic probes are:</p>
-<p><ul></p>
-<p><li> <code>A_07_P000070</code></p>
-<p><li> <code>A_07_P061472</code></p>
-<p><li> <code>A_07_P052489</code>
-&lt;/ul&gt;
-&lt;/div&gt;</p>
+<h3 id="Problematic-probes-">Problematic probes <a id="problem_probes" /><a class="anchor-link" href="#Problematic-probes-">&#182;</a></h3><div class="alert-warning">
+We can readily identify problematic probes in treatment replicate 3, as they are the only probes with intensity greater than 40,000.
 
+The problematic probes are:
+<ul>
+<li> `A_07_P000070`
+<li> `A_07_P061472`
+<li> `A_07_P052489`
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -17856,8 +17852,7 @@ We can readily identify problematic probes in treatment replicate 3, as they are
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3>Interpolating values for problem probes <a id="interpolation"></h3>
-<p>We replace the three clear outlying values for the three problematic probes in <code>input.3</code> of the <code>treatment</code> array with interpolated values. We assume that <code>input.1</code> and <code>input.2</code> are typical of the input intensities for these three probes, and take the average of their values to substitute for <code>input.3</code> for each.</p>
+<h3 id="Interpolating-values-for-problem-probes-">Interpolating values for problem probes <a id="interpolation" /><a class="anchor-link" href="#Interpolating-values-for-problem-probes-">&#182;</a></h3><p>We replace the three clear outlying values for the three problematic probes in <code>input.3</code> of the <code>treatment</code> array with interpolated values. We assume that <code>input.1</code> and <code>input.2</code> are typical of the input intensities for these three probes, and take the average of their values to substitute for <code>input.3</code> for each.</p>
 
 </div>
 </div>
@@ -20927,8 +20922,7 @@ dP50AAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Normalisation <a id="normalisation"></h2>
-<p>We expect the array intensity distribution to vary according to whether the sample was from the input (strong) or output (weak) set, and whether the sample came from the control or treatment pools. We therefore divide the dataset into four independently-normalised components:</p>
+<h2 id="Normalisation-">Normalisation <a id="normalisation" /><a class="anchor-link" href="#Normalisation-">&#182;</a></h2><p>We expect the array intensity distribution to vary according to whether the sample was from the input (strong) or output (weak) set, and whether the sample came from the control or treatment pools. We therefore divide the dataset into four independently-normalised components:</p>
 <ul>
 <li><code>control_input</code></li>
 <li><code>control_output</code></li>
@@ -22643,8 +22637,7 @@ These plots illustrate that there is relative reduction in measured array intens
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Wide to long form <a id="wide_to_long"></h2>
-<p>We have four dataframes containing normalised data:</p>
+<h2 id="Wide-to-long-form-">Wide to long form <a id="wide_to_long" /><a class="anchor-link" href="#Wide-to-long-form-">&#182;</a></h2><p>We have four dataframes containing normalised data:</p>
 <ul>
 <li><code>control_input</code></li>
 <li><code>control_output</code></li>
@@ -23440,15 +23433,14 @@ There is a population of low-intensity values for each set of arrays, however. T
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Probe matches to Sakai and DH10B <a id="probe_matches"></h2>
-<p><br /><div class="alert-warning">
-Evidence for potential hybridisation of probes to DH10B or Sakai isolates was determined by default <code>BLASTN</code> query of each probe sequence against chromosome and plasmid feature nucleotide sequences from the NCBI records:</p>
-<p><ul></p>
-<p><li> <code>GCF_000019425.1_ASM1942v1_cds_from_genomic.fna</code></p>
-<p><li> <code>GCF_000008865.1_ASM886v1_cds_from_genomic.fna</code>
-&lt;/ul&gt;
-&lt;/div&gt;</p>
+<h2 id="Probe-matches-to-Sakai-and-DH10B-">Probe matches to Sakai and DH10B <a id="probe_matches" /><a class="anchor-link" href="#Probe-matches-to-Sakai-and-DH10B-">&#182;</a></h2><div class="alert-warning">
+Evidence for potential hybridisation of probes to DH10B or Sakai isolates was determined by default `BLASTN` query of each probe sequence against chromosome and plasmid feature nucleotide sequences from the NCBI records:
 
+<ul>
+<li> `GCF_000019425.1_ASM1942v1_cds_from_genomic.fna`
+<li> `GCF_000008865.1_ASM886v1_cds_from_genomic.fna`
+</ul>
+</div>
 <pre><code>$ blastn -query Array/probe_seqlist.fas -subject Sakai/GCF_000008865.1_ASM886v1_cds_from_genomic.fna -outfmt 6 -out probes_blastn_sakai.tab -perc_identity 100
 $ blastn -query Array/probe_seqlist.fas -subject DH10B/GCF_000019425.1_ASM1942v1_cds_from_genomic.fna -outfmt 6 -out probes_blastn_dh10b.tab -perc_identity 100</code></pre>
 <p>We first identify the probes that match uniquely at 100% identity to a single <em>E. coli</em> gene product from either Sakai or DH10B</p>
@@ -24284,11 +24276,9 @@ xZWIiIiIwgKLKxERERGFBRZXIiIiIgoL/w+qsfKiSiJd3wAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2>Write data <a id="write"></h2>
-<p><br /><div class="alert-warning">
-**We write the censored, normalised, long-format data to the `datasets/` subdirectory.**
-</div></p>
-
+<h2 id="Write-data-">Write data <a id="write" /><a class="anchor-link" href="#Write-data-">&#182;</a></h2><div class="alert-warning">
+<b>We write the censored, normalised, long-format data to the `datasets/` subdirectory.</b>
+</div>
 </div>
 </div>
 </div>
