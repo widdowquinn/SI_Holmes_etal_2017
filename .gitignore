@@ -1,6 +1,7 @@
-# Exclude iPython files
+# Exclude iPython/other Python files
 .ipynb_checkpoints/
 __pycache__/
+.pylintrc
 
 # Exclude generated output
 output/
@@ -9,6 +10,7 @@ jobs/
 stderr/
 stdout/
 multiplexed_data
+notebooks/model_fits/
 
 # Exclude virtualenv
 venv-SI_Holmes_2016/
@@ -18,4 +20,3 @@ venv-SI_Holmes_2016/
 
 # Exclude Mac detritus
 .DS_Store
-

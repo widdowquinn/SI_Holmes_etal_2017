@@ -1,8 +1,12 @@
 <img src="notebooks/images/JHI_STRAP_Web.png" style="width: 150px; float: right;">
 
-# README.md
+# README.md - `SI_Holmes_etal_2017`
 
 This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2017)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
+
+To encourage exploration and reproduction, we have tried to make these notebooks compatible, so far as is possible, with [MyBinder](http://mybinder.org/), to enable you to run them in the cloud without having to install software on your own machine. To use these notebooks, click on [this link](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017), or the button below.
+
+[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017)
 
 ## Table of Contents
 
@@ -15,18 +19,18 @@ This repository contains files detailing the process of fitting the model of the
 </a>
 
 * `data/`: directory containing the raw microarray data, and the genomic data used in the analysis
-* `LICENCE`: a copy of the MIT licence that governs the code contained in this repository
 * `models/`: directory containing Stan models in plan text format
 * `multiplexing/`: directory containing scripts used to generate multiplexed data for *k*-fold cross-validation, and to fit the cross-validation models
 * `notebooks/`: directory containing Jupyter notebooks describing and enabling reproduction of the data QA, model fitting and model validation
-* `README.md`: this file
 * `requirements.txt`: file describing the Python dependencies of the notebooks and scripts, which can be used to create a virtual environment for replication of the analysis from the paper.
+* `LICENCE`: a copy of the MIT licence that governs the code contained in this repository
+* `README.md`: this file
 
 ### How to get help for the code/analyses in this repository
 
 Please raise any issues at the GitHub issues page for this repository:
 
-* [GitHub issues page]()
+* [GitHub issues page](https://github.com/widdowquinn/SI_Holmes_etal_2017/issues)
 
 <a id="quickstart">
 ## Quick Start
@@ -43,7 +47,7 @@ Using `pip` to install the required dependencies listed in `requirements.txt` sh
 **NOTE:** You will need to have installed `virtualenv`[[*](http://docs.python-guide.org/en/latest/dev/virtualenvs/)] for your system.
 
 ```bash
-virtualenv venv-SI_Holmes_2016
+virtualenv venv-SI_Holmes_2016 -p python3.6
 source venv-SI_Holmes_2016/bin/activate
 pip install -r requirements.txt
 ```
