@@ -11,6 +11,7 @@ stderr/
 stdout/
 multiplexed_data
 notebooks/model_fits/
+runthrough/
 
 # Exclude virtualenv
 venv-SI_Holmes_2016/
