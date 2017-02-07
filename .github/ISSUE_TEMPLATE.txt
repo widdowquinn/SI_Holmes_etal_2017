@@ -20,8 +20,18 @@ The current output. Knowing what is the current behavior is useful.
 Describe what you expect the output to be. Knowing the correct behavior is also very useful.
 
 
-#### pyani Version:
-
 #### Python Version:
+It may be useful to provide the output of the commands:
+
+```
+pip freeze
+```
+
+and
+
+```
+which python
+```
+
 
 #### Operating System:
