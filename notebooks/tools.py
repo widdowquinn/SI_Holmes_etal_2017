@@ -400,19 +400,24 @@ def label_positive_effects(df):
     return df
 
 
-def plot_parameter(df, varname, title='', thresh=0):
+def plot_parameter(df, varname, title='', thresh=0, annotations=None,
+                   offset_pc=1):
     """Plot the estimated parameter median, and 50% CI, in locus tag order
     
     credibility intervals are coloured blue if they include the threshold,
-    red (value below threshold) or green (value above threshold) otherwise
+    red (value below threshold) or green (value above threshold) otherwise.
+
+    annotations expects a dictionary where the key is the annotation text, and
+    the value is a tuple of co-ordinates for the centre of the text
     """
     vals = df['{0}_median'.format(varname)]
     cilo = df['{0}_25pc'.format(varname)]
     cihi = df['{0}_75pc'.format(varname)]
     
-    plt.figure(figsize=(20,8))
+    fig = plt.figure(figsize=(20,8))
+    ax = fig.add_subplot(1, 1, 1)
     #plt.scatter(range(len(test_data)), test_data['beta'], alpha=1, color='k')
-    plt.scatter(range(len(df)), vals, c='k', marker='.')
+    ax.scatter(range(len(df)), vals, c='k', marker='.')
     for idx, val, vlo, vhi in zip(range(len(df)),
                                   vals, cilo, cihi):
         if vlo < thresh < vhi:
@@ -423,11 +428,37 @@ def plot_parameter(df, varname, title='', thresh=0):
             color = 'g-'
         else:
             color = 'k-'
-        plt.plot([idx, idx], [vlo, vhi], color, alpha=0.4)
+        ax.plot([idx, idx], [vlo, vhi], color, alpha=0.4)
     plt.title("{0} [threshold: {1:.2f}]".format(title, thresh))
-    plt.xlim(0, len(df));
 
+    # Add box annotations, if requested
+    y0, y1 = ax.get_ylim()    
+    max_y_ann = y1
+    if annotations is not None:
+        bbox_props = dict(boxstyle="square,pad=0.3", color="w")
+        for k, v in annotations.items():
+            # Text box
+            t = ax.text(0.5 * (v[0] + v[1]), v[2], k,
+                        ha="center", va="center", bbox=bbox_props)
+            # Marker
+            offset = 0.075 * (y1 - y0)
+            ax.plot([v[0], v[0]], [v[2] - offset, v[2] - 0.5 * offset], 'k-')
+            ax.plot([v[1], v[1]], [v[2] - offset, v[2] - 0.5 * offset], 'k-')
+            ax.plot([v[0], v[1]], [v[2] - 0.75 * offset,
+                                   v[2] - 0.75 * offset], 'k-')            
+            # Max ylim
+            max_y_ann = max(v[2] * 1.1, max_y_ann)
+    
+    # Set x and y limits
+    ax.set_ylim(y0, max_y_ann)
+    ax.set_xlim(0, len(df));
+    
 
+# Get index of locus tag for plotting
+def get_lt_index(locus_tag, df):
+    return list(df['locus_tag']).index(locus_tag)
+
+    
 def get_annotation(tag, anndict):
     try:
         return anndict[tag]
