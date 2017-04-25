@@ -400,11 +400,11 @@ def label_positive_effects(df):
     return df
 
 
-def plot_parameter(df, varname, title='', thresh=0, annotations=None,
-                   offset_pc=1):
-    """Plot the estimated parameter median, and 50% CI, in locus tag order
+def plot_parameter(df, ax, varname, thresh, annotations=None, label=None):
+    """Plot the estimated parameter median, and 50% CI, in locus tag order on
+    the passed matplotlib axis
     
-    credibility intervals are coloured blue if they include the threshold,
+    Credibility intervals are coloured blue if they include the threshold,
     red (value below threshold) or green (value above threshold) otherwise.
 
     annotations expects a dictionary where the key is the annotation text, and
@@ -414,9 +414,6 @@ def plot_parameter(df, varname, title='', thresh=0, annotations=None,
     cilo = df['{0}_25pc'.format(varname)]
     cihi = df['{0}_75pc'.format(varname)]
     
-    fig = plt.figure(figsize=(20,8))
-    ax = fig.add_subplot(1, 1, 1)
-    #plt.scatter(range(len(test_data)), test_data['beta'], alpha=1, color='k')
     ax.scatter(range(len(df)), vals, c='k', marker='.')
     for idx, val, vlo, vhi in zip(range(len(df)),
                                   vals, cilo, cihi):
@@ -429,7 +426,6 @@ def plot_parameter(df, varname, title='', thresh=0, annotations=None,
         else:
             color = 'k-'
         ax.plot([idx, idx], [vlo, vhi], color, alpha=0.4)
-    plt.title("{0} [threshold: {1:.2f}]".format(title, thresh))
 
     # Add box annotations, if requested
     y0, y1 = ax.get_ylim()    
@@ -451,9 +447,20 @@ def plot_parameter(df, varname, title='', thresh=0, annotations=None,
     
     # Set x and y limits
     ax.set_ylim(y0, max_y_ann)
-    ax.set_xlim(0, len(df));
-    
+    ax.set_xlim(-1, len(df) + 1)
 
+    # Don't show x-axis ticks
+    ax.get_xaxis().set_visible(False)
+
+    # Draw label if asked
+    y0, y1 = ax.get_ylim()        
+    bbox_props = dict(boxstyle="square,pad=0.3", color="w")
+    if label:
+        ax.text(0, (y1 + (y1 - y0) * 0.01), label,
+                va="bottom", ha="left", bbox=bbox_props,
+                size="x-large")
+
+    
 # Get index of locus tag for plotting
 def get_lt_index(locus_tag, df):
     return list(df['locus_tag']).index(locus_tag)
