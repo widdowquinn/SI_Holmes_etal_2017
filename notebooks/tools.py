@@ -456,7 +456,7 @@ def plot_parameter(df, ax, varname, thresh, annotations=None, label=None):
     y0, y1 = ax.get_ylim()        
     bbox_props = dict(boxstyle="square,pad=0.3", color="w")
     if label:
-        ax.text(0, (y1 + (y1 - y0) * 0.01), label,
+        ax.text(-1, (y1 + (y1 - y0) * 0.01), label,
                 va="bottom", ha="left", bbox=bbox_props,
                 size="x-large")
 
