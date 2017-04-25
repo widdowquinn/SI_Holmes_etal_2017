@@ -14,9 +14,9 @@ To encourage exploration and reproduction, we have tried to make these notebooks
 2. [Quick Start](#quickstart)
 3. [Replicating the manuscript model](#replicate)
 
-<a id="files">
+
+<a id="files"></a>
 ## Files and Directories
-</a>
 
 * `data/`: directory containing the raw microarray data, and the genomic data used in the analysis
 * `models/`: directory containing Stan models in plan text format
@@ -32,9 +32,8 @@ Please raise any issues at the GitHub issues page for this repository:
 
 * [GitHub issues page](https://github.com/widdowquinn/SI_Holmes_etal_2017/issues)
 
-<a id="quickstart">
+<a id="quickstart"></a>
 ## Quick Start
-</a>
 
 ### Set up the environment
 
@@ -82,9 +81,8 @@ From the Jupyter homepage in your browser window, click on the link to the `note
 
 When they were committed to the repository, the notebooks contained output from the original runs, so they can be read and understood without needing to rerun the models. If you would like to rerun/reproduce/modify these outputs, we recommend restarting the kernel and clearing all output before beginning. This can be done by clicking on `Kernel -> Restart & Clear Output`, in the notebook window.
 
-<a id="replicate">
+<a id="replicate"></a>
 ## Replicating the manuscript model
-</a>
 
 To replicate the manuscript model from scratch: start the virtual environment, then run the notebooks and scripts as described below (remembering to use `Kernel -> Restart & Clear Output` in each notebook to remove the original/existing outputs):
 
