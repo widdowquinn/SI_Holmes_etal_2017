@@ -21,3 +21,6 @@ venv-SI_Holmes_2016/
 
 # Exclude Mac detritus
 .DS_Store
+
+# Exclude virtual envronments
+venv-*

@@ -4,9 +4,7 @@
 
 This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2017)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
 
-To encourage exploration and reproduction, we have tried to make these notebooks compatible, so far as is possible, with [MyBinder](http://mybinder.org/), to enable you to run them in the cloud without having to install software on your own machine. To use these notebooks, click on [this link](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017), or the button below.
-
-[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017)
+We have used the [Jupyter notebook](http://jupyter.org/) environment to facilitate [literate programming](https://en.wikipedia.org/wiki/Literate_programming), and to encourage exploration of and experimentation with the code and model. These notebooks have sections of explanatory text that are punctuated by code snippets. In the Jupyter notebook environment, all of these code snippets are editable and runnable.
 
 ## Table of Contents
 
@@ -28,16 +26,32 @@ To encourage exploration and reproduction, we have tried to make these notebooks
 
 ### How to get help for the code/analyses in this repository
 
-Please raise any issues at the GitHub issues page for this repository:
+Please raise any issues at the GitHub issues page for this repository, by following the link below:
 
-* [GitHub issues page](https://github.com/widdowquinn/SI_Holmes_etal_2017/issues)
+* [Raise an issue](https://github.com/widdowquinn/SI_Holmes_etal_2017/issues)
 
 <a id="quickstart"></a>
 ## Quick Start
 
-### Set up the environment
+We have provided three ways to work with these analysis notebooks:
 
-We would like our analysis to be reproducible, and for this we recommend using a Python virtual environment to ensure compatibility of dependencies and to replicate the environment used for the analysis. The virtual environment separates installation of Python packages from your system Python installation, enabling the running of these analyses without interfering with the system Python.
+### 1. Read the analysis notebooks on `GitHub`
+
+You do not need to start a `MyBinder` instance, or start your own local Jupyter instance, to read these notebooks. We provide static versions of the Jupyter analysis notebooks at the following links:
+
+* [Notebook 01: Data QA](notebooks/01-data_qa.html)
+* [Notebook 02: Full Model Fit](notebooks/02-full_model_fit.html)
+* [Notebook 03: Crossvalidation](notebooks/03-crossvalidation.html)
+
+### 2. Interact with the analysis notebooks on `MyBinder`
+
+To encourage exploration and reproduction, we have tried to make these notebooks compatible, so far as is possible, with [MyBinder](http://mybinder.org/), to enable you to run them in the cloud without having to install software on your own machine. To use these notebooks, click on [this link](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017), or the button below.
+
+[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017)
+
+### 3. Interact with the analysis notebooks on your own machine
+
+We would like our analysis to be reproducible, and to reproduce our work on your own machine, we recommend using a Python virtual environment to ensure compatibility of dependencies and to replicate the environment used for the analysis. The virtual environment separates installation of Python packages from your system Python installation, enabling the running of these analyses without interfering with the system Python.
 
 Using `pip` to install the required dependencies listed in `requirements.txt` should ensure that the code in this repository runs as expected.
 
@@ -46,8 +60,8 @@ Using `pip` to install the required dependencies listed in `requirements.txt` sh
 **NOTE:** You will need to have installed `virtualenv`[[*](http://docs.python-guide.org/en/latest/dev/virtualenvs/)] for your system.
 
 ```bash
-virtualenv venv-SI_Holmes_2016 -p python3.6
-source venv-SI_Holmes_2016/bin/activate
+virtualenv venv-SI_Holmes_2017 -p python3.6
+source venv-SI_Holmes_2017/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -55,10 +69,6 @@ pip install -r requirements.txt
 
 * `virtualenv`: [The Hitchhiker's Guide to Python](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
 * `pip`: [Installing Python Modules](https://docs.python.org/3/installing/)
-
-### Use the notebooks
-
-We have used the [Jupyter notebook](http://jupyter.org/) environment to facilitate [literate programming](https://en.wikipedia.org/wiki/Literate_programming), and to encourage exploration of and experimentation with the code and model. These notebooks have sections of explanatory text that are punctuated by code snippets. In the Jupyter notebook environment, all of these code snippets are editable and runnable.
 
 #### Start the notebook environment
 
@@ -84,7 +94,7 @@ When they were committed to the repository, the notebooks contained output from 
 <a id="replicate"></a>
 ## Replicating the manuscript model
 
-To replicate the manuscript model from scratch: start the virtual environment, then run the notebooks and scripts as described below (remembering to use `Kernel -> Restart & Clear Output` in each notebook to remove the original/existing outputs):
+To replicate the manuscript model from scratch: start the virtual environment (in `MyBinder`, or on your own machine), then run the notebooks and scripts as described below (remembering to use `Kernel -> Restart & Clear Output` in each notebook to remove the original/existing outputs):
 
 ### Data processing, QA and normalisation
 
