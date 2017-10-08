@@ -42,6 +42,7 @@ You do not need to start a `MyBinder` instance, or start your own local Jupyter 
 * [Notebook 01: Data QA](notebooks/01-data_qa.html)
 * [Notebook 02: Full Model Fit](notebooks/02-full_model_fit.html)
 * [Notebook 03: Crossvalidation](notebooks/03-crossvalidation.html)
+* [Notebook 04: etpD Complementation](notebooks/04-etpD.html)
 
 ### 2. Interact with the analysis notebooks on `MyBinder`
 
@@ -156,3 +157,4 @@ All random processes in the model building and fitting can take a seed value for
 * the seed used for the main Stan fit (in notebook `02-full_model_fit`)
 * the seed for splitting the input data into multiplexed sets (`multiplex_data.py`)
 * the seed used for the multiplexing Stan fits (`run_multiplex_models.py`)
+* the seed used for fitting the *etpD* complementation data (in notebook `04-etpD`)
