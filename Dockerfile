@@ -14,5 +14,5 @@ RUN echo "c.NotebookApp.token = ''" >> $HOME/.jupyter/jupyter_notebook_config.py
 
 # Install requirements for Python 3
 #RUN /home/main/anaconda/envs/python3/bin/pip install -r requirements.txt
-#RUN echo ${PWD}
+RUN ls ${PWD}
 RUN /home/main/anaconda/envs/python3/bin/pip install -r /home/main/mybinder_requirements.txt
