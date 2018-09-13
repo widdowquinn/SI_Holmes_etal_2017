@@ -346,7 +346,7 @@ def extract_variable_summaries(obj, otype='fit',
     lt.drop('index_x', 1, inplace=True)
     lt.drop('index_y', 1, inplace=True)    
 
-    lt.sort('locus_tag', inplace=True)
+    lt.sort_values('locus_tag', inplace=True)
 
     return df, lt
 
