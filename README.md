@@ -1,10 +1,10 @@
 <img src="notebooks/images/JHI_STRAP_Web.png" style="width: 150px; float: right;">
 
-# README.md - `SI_Holmes_etal_2017`
+# README.md - `SI_Holmes_etal_2018`
 
-This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2017)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
+This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2018)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
 
-We have used the [Jupyter notebook](http://jupyter.org/) environment to facilitate [literate programming](https://en.wikipedia.org/wiki/Literate_programming), and to encourage exploration of and experimentation with the code and model. These notebooks have sections of explanatory text that are punctuated by code snippets. In the Jupyter notebook environment, all of these code snippets are editable and runnable.
+We have used the [`Jupyter` notebook](http://jupyter.org/) environment to facilitate [literate programming](https://en.wikipedia.org/wiki/Literate_programming), and to encourage exploration of and experimentation with the code and model. These notebooks have sections of explanatory text that are punctuated by code snippets. In the `Jupyter` notebook environment, all of these code snippets are editable and runnable.
 
 ## Table of Contents
 
@@ -17,9 +17,9 @@ We have used the [Jupyter notebook](http://jupyter.org/) environment to facilita
 ## Files and Directories
 
 * `data/`: directory containing the raw microarray data, and the genomic data used in the analysis
-* `models/`: directory containing Stan models in plan text format
+* `models/`: directory containing `Stan` models in plan text format
 * `multiplexing/`: directory containing scripts used to generate multiplexed data for *k*-fold cross-validation, and to fit the cross-validation models
-* `notebooks/`: directory containing Jupyter notebooks describing and enabling reproduction of the data QA, model fitting and model validation
+* `notebooks/`: directory containing `Jupyter` notebooks describing and enabling reproduction of the data QA, model fitting and model validation
 * `requirements.txt`: file describing the Python dependencies of the notebooks and scripts, which can be used to create a virtual environment for replication of the analysis from the paper.
 * `LICENCE`: a copy of the MIT licence that governs the code contained in this repository
 * `README.md`: this file
@@ -28,7 +28,7 @@ We have used the [Jupyter notebook](http://jupyter.org/) environment to facilita
 
 Please raise any issues at the GitHub issues page for this repository, by following the link below:
 
-* [Raise an issue](https://github.com/widdowquinn/SI_Holmes_etal_2017/issues)
+* [Raise an issue](https://github.com/widdowquinn/SI_Holmes_etal_2018/issues)
 
 <a id="quickstart"></a>
 ## Quick Start
@@ -37,49 +37,43 @@ We have provided three ways to work with these analysis notebooks:
 
 ### 1. Read the analysis notebooks on `GitHub`
 
-You do not need to start a `MyBinder` instance, or start your own local Jupyter instance, to read these notebooks. We provide static versions of the Jupyter analysis notebooks at the following links:
+You do not need to start a `MyBinder` instance, or start your own local `Jupyter` instance, to read these notebooks. We provide static versions of the `Jupyter` analysis notebooks at the following links:
 
 * [Notebook 01: Data QA](notebooks/01-data_qa.html)
 * [Notebook 02: Full Model Fit](notebooks/02-full_model_fit.html)
 * [Notebook 03: Crossvalidation](notebooks/03-crossvalidation.html)
-* [Notebook 04: etpD Complementation](notebooks/04-etpD.html)
+* [Notebook 04: *etpD* Complementation](notebooks/04-etpD.html)
+* [Notebook 05: *etpC*/*etpD* fluorescence](notebooks/05-fluorescence.html)
 
 ### 2. Interact with the analysis notebooks on `MyBinder`
 
-To encourage exploration and reproduction, we have tried to make these notebooks compatible, so far as is possible, with [MyBinder](http://mybinder.org/), to enable you to run them in the cloud without having to install software on your own machine. To use these notebooks, click on [this link](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017), or the button below.
+To encourage exploration and reproduction, we have tried to make these notebooks compatible, so far as is possible, with [`MyBinder`](http://mybinder.org/), to enable you to run them in the cloud without having to install software on your own machine. To use these notebooks, click on [this link](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2018), or the button below.
 
-[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2017)
+[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2018)
 
 ### 3. Interact with the analysis notebooks on your own machine
 
-We would like our analysis to be reproducible, and to reproduce our work on your own machine, we recommend using a Python virtual environment to ensure compatibility of dependencies and to replicate the environment used for the analysis. The virtual environment separates installation of Python packages from your system Python installation, enabling the running of these analyses without interfering with the system Python.
-
-Using `pip` to install the required dependencies listed in `requirements.txt` should ensure that the code in this repository runs as expected.
+To reproduce our work on your own machine, we recommend using a [`conda`](https://conda.io/en/master/) environment to ensure compatibility of dependencies and to replicate the environment used for the analysis. This environment separates installation of `Python` packages from your system's `Python` installation (if there is one), enabling the running of these analyses without interfering with any previously-installed setup.
 
 #### Create and start the virtual environment
 
-**NOTE:** You will need to have installed `virtualenv`[[*](http://docs.python-guide.org/en/latest/dev/virtualenvs/)] for your system.
+**NOTE:** You will need to have installed `conda`[[*](http://docs.python-guide.org/en/latest/dev/virtualenvs/)] for your system.
 
 ```bash
-virtualenv venv-SI_Holmes_2017 -p python3.6
-source venv-SI_Holmes_2017/bin/activate
-pip install -r requirements.txt
+$ conda create -n holmes_et_al_2018 python=3.6
+$ source activate holmes_et_al_2018
+$ conda install --yes --file requirements.txt
 ```
 
-**Read more**
+#### Start the notebook
 
-* `virtualenv`: [The Hitchhiker's Guide to Python](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
-* `pip`: [Installing Python Modules](https://docs.python.org/3/installing/)
-
-#### Start the notebook environment
-
-From the top level directory of this repository, start the Jupyter notebook server by issuing the command:
+From the top level directory of this repository, start the `Jupyter` notebook server by issuing the command:
 
 ```bash
 jupyter notebook
 ```
 
-A new browser window or tab should open, containing the Jupyter homepage, which will show a listing of files and directories in the top level of the repository.
+A new browser window or tab should open, containing the `Jupyter` homepage, which will show a listing of files and directories in the top level of the repository.
 
 **Read more**
 
@@ -88,7 +82,7 @@ A new browser window or tab should open, containing the Jupyter homepage, which 
 
 #### Opening the notebooks
 
-From the Jupyter homepage in your browser window, click on the link to the `notebooks/` subdirectory. Then click on the link for the notebook you wish to use. The selected notebook should then open in a new browser tab.
+From the `Jupyter` homepage in your browser window, click on the link to the `notebooks/` subdirectory. Then click on the link for the notebook you wish to use. The selected notebook should then open in a new browser tab.
 
 When they were committed to the repository, the notebooks contained output from the original runs, so they can be read and understood without needing to rerun the models. If you would like to rerun/reproduce/modify these outputs, we recommend restarting the kernel and clearing all output before beginning. This can be done by clicking on `Kernel -> Restart & Clear Output`, in the notebook window.
 
@@ -113,7 +107,7 @@ To replicate the manuscript model from scratch: start the virtual environment (i
 
 ### 10-fold crossvalidation
 
-The crossvalidation dataset construction and model fit were conducted in the `multiplexing` directory, using Python scripts rather than Jupyter notebooks. To reproduce the dataset construction and fits, first change directory to `multiplexing`:
+The crossvalidation dataset construction and model fit were conducted in the `multiplexing` directory, using `Python` scripts rather than `Jupyter` notebooks. To reproduce the dataset construction and fits, first change directory to `multiplexing`:
 
 ```bash
 cd multiplexing
