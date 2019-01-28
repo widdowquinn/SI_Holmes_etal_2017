@@ -1,6 +1,6 @@
 <img src="notebooks/images/JHI_STRAP_Web.png" style="width: 150px; float: right;">
 
-# README.md - `SI_Holmes_etal_2018`
+# README.md - `SI_Holmes_etal_2019`
 
 This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2018)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
 
