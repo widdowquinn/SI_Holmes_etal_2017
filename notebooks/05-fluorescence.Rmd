@@ -1,0 +1,107 @@
+---
+title: "Supplementery Information: *Holmes et al.* 2019"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+```
+
+<img src="images/JHI_STRAP_Web.png" style="width: 150px; float: right;">
+
+## 5. *E. coli* Sakai *etp* T2SS operon and *in vitro* expression at 18degC
+
+This notebook describes linear modelling of *in vitro* expression for *etp* genes in *E. coli* Sakai, and the production of an analogous figure to figure 5 from the manuscript.
+
+In this experiment, GFP reporter activity was used to measure gene expression (separately) from the 5` UTR or either *etpC* (508 bp) or *etpD* (211bp), in *E. coli* Sakai. The bacteria were grown in MOPS medium suopplemented either with glucose or glycerol, and Two biological replicates were used for each of the *etpC* and *etpD* constructs. 
+
+Expression values were measured as Relative Fluorescence Units (RFU) in late exponential phase, corrected for background from the promoterless reporter plasmid pKC026 measured at the same optical density, as `raw` values. These `raw` RFU were normalised for cell density.
+
+### Data
+
+The data for analysis are provided in the accompanying file `long_form_data.tab`.
+
+```{r load_data}
+# Load data
+data = read.table("datasets/long_form_data.tab", header=T, sep="\t")
+
+# Convert biological replicates to factors
+data$biological_replicate = as.factor(data$biological_replicate)
+
+# Show data in tabular form
+data %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width=F)
+```
+
+
+## Visualising normalised data
+
+We can visualise the normalised data directly, with superimposed boxplots to estimate the range of data, split by medium and gene:
+
+```{r plot_normalised}
+ggplot(data, aes(x=gene, y=normalised)) +
+  geom_jitter(aes(color=biological_replicate, shape=medium), width=0.1, height=0, size=4, alpha=0.6) +
+  geom_boxplot(data=data %>% filter(medium=="glycerol"), aes(x=gene), fill=NA, width=0.1) +
+  geom_boxplot(data=data %>% filter(medium=="glucose"), aes(x=gene), fill=NA, width=0.1) +
+  labs(y="gfp fluorescence (RFU)")
+```
+
+It is clear by sight that the fluorescence in glycerol is greater than that in glucose, for both genes. Similarly, by sight, it is clear that (in the same medium) fluorescence is greater for *etpD* than for *etpC*.
+
+Also, while there is a visible effect on measured fluorescence associated with the biological replicate, this effect is small with respect to the difference between media and genes, so as a first approximation we do not account for this batch effect.
+
+
+## Estimating medium and gene effects
+
+We can fit a linear model (LM) to the data, in order to estimate the effective difference in fluorescence between *etpC* and *etpD*, and between media. We construct two models, each fitting the normalised fluorescence to a combination of `gene` and `medium` explanatory variables.
+
+```{r lm_fit}
+# Fit GLM with interactions
+model1 = lm(normalised ~ gene + medium + gene * medium, data=data)
+
+# Fit GLM without interactions
+model2 = lm(normalised ~ gene + medium, data=data)
+```
+
+The first thing we can test is whether there is a (statistically) significant difference between the two models. The models differ only by inclusion of an *interaction term*: the combined effect of changing the gene and the medium. If the fit to the data is much better when we include this interaction we should prefer the more complex model (`model1`). Otherwise, we'd prefer the simpler model. The practical interpretation of this is that, if the simpler model (`model2`) fits the data about as well as the more complex model (`model1`), we can assume that the effect of the gene on fluorescence is essentially independent of the effect of changing medium. If the more complex model fits significantly better, then we can interpret this as there being a *combined* effect of the medium and gene, interacting in some way, on the measured fluorescence.
+
+```{r model_comparison}
+# Compare the models
+anova(model2, model1)
+```
+
+The comparison produces an ANOVA table comparing the two models. The `Df` result is equal to one, meaning that we have a single additional parameter in the more complex model. The very small P-value (10^-13) indicates that the addition of this parameter has a statistically significant effect on the model fit, and that we should prefer the more complex model.
+
+```{r model_fit}
+# Generate a table of the model fit
+anova(model1)
+```
+
+The ANOVA table for the more complex model has very small P-values for all three parameters: `gene`, `medium` and `gene:medium` interaction. This indicates that all three parameters have a statistically significant effect on the measured fluorescence.
+
+```{r model_coefficients}
+# Show model coefficients
+model1
+```
+
+The model coefficients can be interpreted as follows.
+
+- **`(Intercept)`** can be taken to represent a "baseline" fluorescence. In this case, it is the estimated (mean) fluorescence for the gene *etpC* in MOPS, supplemented with glucose, and has value 297.3 units. All other coefficients represent changes to this baseline.
+- **`geneetpD`** is the estimated effect of changing the gene to *etpD* (but remaining in the glucose-supplemented medium). The change of gene (in the same medium) is estimated to increase measured fluorescence by 1032 units.
+- **`mediumglycerol`** is the estimated (mean) effect of changing the supplement for the medium from glucose to glycerol, for *etpC*. This has the value 535.5 units.
+- **`geneetpD:mediumglycerol`** is the estimated (mean) effect of changing both the supplement medium *and* the gene *at the same time*. This has the value 3388.1, which is much larger than the estimated additive effect of changing gene or supplement alone (1032 + 535.5 = 1567.5). This can be interpreted to indicate that there is an enhancing effect of the glycerol supplement on *etpD*-associated fluorescence, greater than would be expected from a linear combination of the individual effects of changing gene or medium supplement.
+
+## Conclusions
+
+- There are clear statistically significant effects on measured fluorescence due to:
+  - choice of gene (*etpC* vs *etpD*)
+  - choice of MOPS supplement (glucose vs glycerol)
+- Glycerol has a statistically significant enhancing effect on measured GFP fluorescence associated with *etpD*.
