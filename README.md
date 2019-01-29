@@ -2,7 +2,7 @@
 
 # README.md - `SI_Holmes_etal_2019`
 
-This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2018)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
+This repository contains files detailing the process of fitting the model of the enrichment array experiment described in [Holmes *et al.* (2019)](). These files are intended to enable independent reproduction, exploration and extension of the analysis reported in the paper.
 
 We have used the [`Jupyter` notebook](http://jupyter.org/) environment to facilitate [literate programming](https://en.wikipedia.org/wiki/Literate_programming), and to encourage exploration of and experimentation with the code and model. These notebooks have sections of explanatory text that are punctuated by code snippets. In the `Jupyter` notebook environment, all of these code snippets are editable and runnable.
 
@@ -28,7 +28,7 @@ We have used the [`Jupyter` notebook](http://jupyter.org/) environment to facili
 
 Please raise any issues at the GitHub issues page for this repository, by following the link below:
 
-* [Raise an issue](https://github.com/widdowquinn/SI_Holmes_etal_2018/issues)
+* [Raise an issue](https://github.com/widdowquinn/SI_Holmes_etal_2019/issues)
 
 <a id="quickstart"></a>
 ## Quick Start
@@ -47,9 +47,9 @@ You do not need to start a `MyBinder` instance, or start your own local `Jupyter
 
 ### 2. Interact with the analysis notebooks on `MyBinder`
 
-To encourage exploration and reproduction, we have tried to make these notebooks compatible, so far as is possible, with [`MyBinder`](http://mybinder.org/), to enable you to run them in the cloud without having to install software on your own machine. To use these notebooks, click on [this link](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2018), or the button below.
+To encourage exploration and reproduction, we have tried to make these notebooks compatible, so far as is possible, with [`MyBinder`](http://mybinder.org/), to enable you to run them in the cloud without having to install software on your own machine. To use these notebooks, click on [this link](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2019), or the button below.
 
-[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2018)
+[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org:/repo/widdowquinn/si_holmes_etal_2019)
 
 ### 3. Interact with the analysis notebooks on your own machine
 
@@ -60,8 +60,8 @@ To reproduce our work on your own machine, we recommend using a [`conda`](https:
 **NOTE:** You will need to have installed `conda`[[*](http://docs.python-guide.org/en/latest/dev/virtualenvs/)] for your system.
 
 ```bash
-$ conda create -n holmes_et_al_2018 python=3.6
-$ source activate holmes_et_al_2018
+$ conda create -n holmes_et_al_2019 python=3.6
+$ source activate holmes_et_al_2019
 $ conda install --yes --file requirements.txt
 ```
 
