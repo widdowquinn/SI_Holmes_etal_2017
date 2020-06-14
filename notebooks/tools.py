@@ -400,7 +400,7 @@ def label_positive_effects(df):
     return df
 
 
-def plot_parameter(df, ax, varname, thresh, annotations=None, label=None):
+def plot_parameter(df, ax, varname, thresh, annotations=None, label=None, ylabel=None):
     """Plot the estimated parameter median, and 50% CI, in locus tag order on
     the passed matplotlib axis
     
@@ -460,6 +460,9 @@ def plot_parameter(df, ax, varname, thresh, annotations=None, label=None):
                 va="bottom", ha="left", bbox=bbox_props,
                 size="x-large")
 
+    # Draw y-axis label
+    if ylabel:
+        ax.set_ylabel(ylabel)
     
 # Get index of locus tag for plotting
 def get_lt_index(locus_tag, df):
